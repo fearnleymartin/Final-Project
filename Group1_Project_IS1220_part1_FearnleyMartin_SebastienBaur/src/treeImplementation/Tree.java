@@ -90,13 +90,29 @@ public class Tree implements Serializable{
 		// first we verify whether the endNode already has a predecessor. If it hasn't then you can add one
 		boolean test = true;
 		for (Edge edge : edgeList){
-			if (edge.getEndNode().equals(e.getEndNode()))
-				test = false;
+//			if (edge.getEndNode() instanceof Fichier && e.getEndNode() instanceof Fichier){
+//				Fichier f = (Fichier) edge.getEndNode();
+//				Fichier e2 = (Fichier) e.getEndNode();
+//				if (f.equals(e.getEndNode()));
+//					test = false;
+//			}
+//			else if (edge.getEndNode() instanceof Directory && e.getEndNode() instanceof Fichier){
+//					test = false;
+//			}
+//			else if (edge.getEndNode() instanceof Fichier && e.getEndNode() instanceof Directory){
+//					test = false;
+//			}
+//			else if (edge.getEndNode() instanceof Directory && e.getEndNode() instanceof Directory){
+//				Directory f = (Directory) edge.getEndNode();
+//				Directory e2 = (Directory) e.getEndNode();
+//				if (f.equals(e.getEndNode()));
+//					test = false;
+//			}
 		}
 		if (test){
 			if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
 				{this.edgeList.add(e);
-//				System.out.println("Entered if");
+				System.out.println("Entered if");
 				}
 			
 			else{
@@ -107,6 +123,7 @@ public class Tree implements Serializable{
 			{
 			throw new ParentException(e.getEndNode() + " already has a predecessor ! You can't add this edge");
 			}
+		
 
 	}
 

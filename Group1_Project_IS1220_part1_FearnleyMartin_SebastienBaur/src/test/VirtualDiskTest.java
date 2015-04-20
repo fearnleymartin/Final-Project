@@ -153,8 +153,9 @@ public class VirtualDiskTest {
 		VirtualDisk vd1 = vdtest;
 		VirtualDisk vd2 = vdtest;
 		Fichier f = new Fichier("test");
+		Fichier f2 = new Fichier("testm");
 		vd1.addFile("Home/level 1/level 2", f);
-		vd2.addFile("Home/level 1/level 2 bis", f);
+		vd2.addFile("Home/level 1/level 2 bis", f2);
 		vd1.move("Home/level 1/level 2/test", "Home/level 1/level 2 bis");
 		assertEquals(vd1,vd2);
 	}

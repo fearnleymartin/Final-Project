@@ -7,12 +7,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
+
+import treeImplementation.Node;
 
 public class Fichier extends treeImplementation.Node implements Serializable, Visitable{
 
 	protected String type;
 	protected long size;
 	protected byte[] contenu; 
+	
 
 	//---------------------------------------------------------------------------------
 	// CONSTRUCTORS
@@ -23,11 +27,15 @@ public class Fichier extends treeImplementation.Node implements Serializable, Vi
 		this.name = name;
 		this.type = type;
 		this.size = size;
+		this.id=Node.uniqueId;
+		Node.uniqueId+=1;
 	}
 
 	public Fichier(String name) {
 		super();
 		this.name = name;
+		this.id=Node.uniqueId;
+		Node.uniqueId+=1;
 	}
 
 	//---------------------------------------------------------------------------------
@@ -138,6 +146,37 @@ public class Fichier extends treeImplementation.Node implements Serializable, Vi
 	@Override
 	public long accept(Visitor visitor) {
 		return visitor.visit(this);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(contenu);
+		result = prime * result + (int) (size ^ (size >>> 32));
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fichier other = (Fichier) obj;
+		if (!Arrays.equals(contenu, other.contenu))
+			return false;
+		if (size != other.size)
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
 	}
 
 

@@ -2,6 +2,8 @@ package dataTypes;
 
 import java.io.Serializable;
 
+import treeImplementation.Node;
+
 public class Directory extends treeImplementation.Node implements Serializable, Visitable{
 
 
@@ -9,6 +11,8 @@ public class Directory extends treeImplementation.Node implements Serializable, 
 	public Directory(String name) {
 		super();
 		this.name = name;
+		this.id=Node.uniqueId;
+		Node.uniqueId+=1;
 	}
 
 

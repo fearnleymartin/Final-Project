@@ -5,8 +5,10 @@ import java.io.Serializable;
 
 public abstract class Node implements Serializable{
 
+	protected static int uniqueId = 0;
 	protected String name;	
-
+	protected int id;
+	
 	public String getName() {
 		return name;
 	}
