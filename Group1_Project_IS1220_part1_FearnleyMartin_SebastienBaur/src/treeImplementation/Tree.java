@@ -193,6 +193,35 @@ public class Tree implements Serializable{
 		return res;
 	}
 	
+	// SHOULD REPLACE THE ABOVE METHOD 
+//	//return list of predecessors of a node, i.e the list of all its ancestors
+//		public List<Node> getAllPredecessors(Node n){
+//			List<Node> res = new ArrayList<Node>();
+//			if (this.getPredecessor(n).size() != 0){
+//				Node prec = this.getPredecessor(n).get(0);
+//				res.add(prec);
+//				res.addAll(this.getAllPredecessors(prec));
+//			}
+//			return res;
+//		}
+	
+	
+	public List<Node> getAllSuccessorsAux(Node n, List<Node> successors){
+		if (this.getSuccessors(n).isEmpty())
+			return successors;
+		else{
+			successors.addAll(this.getSuccessors(n));
+			for (Node successor : this.getSuccessors(n)){
+				successors.addAll(this.getAllSuccessorsAux(successor,new ArrayList<Node>()));
+			}
+			return successors;
+		}
+	}
+	
+	public List<Node> getAllSuccessors(Node n){
+		return this.getAllSuccessorsAux(n, new ArrayList<Node>());}
+	
+	
 	// -----------------------------------------------------------------------------
 	// CONTAINS
 	// -----------------------------------------------------------------------------
