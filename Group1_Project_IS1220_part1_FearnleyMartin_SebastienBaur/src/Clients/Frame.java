@@ -27,6 +27,7 @@ import javax.swing.tree.TreePath;
 
 import treeImplementation.Node;
 import treeImplementation.NotInTreeException;
+import treeImplementation.ParentException;
 import dataTypes.VirtualDisk;
 
 public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener, KeyListener{
@@ -40,8 +41,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	JTree tree;
 	TreePath treepath=null;
-	JTextField textField = new JTextField(20);
-	
+
 	
 	
 	
@@ -67,13 +67,27 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JPanel panDownRight = new JPanel();
 	JScrollPane htmlView = new JScrollPane(htmlPane);
 	
+	//text fields
+	JTextField renameTextField = new JTextField(13);
+	JTextField copyTextField = new JTextField(20);
+//	JTextField removeFileTextField = new JTextField(20);
+	JTextField removeVFSTextField = new JTextField(20);
+	JTextField createVFSTextField = new JTextField(20); // maybe add two others ones for size and location and name
+	JTextField importFileStructureTextField = new JTextField(20); // maybe open a window of navigation AND maybe others text boxes
+	JTextField exportVFSTextField = new JTextField(13);
+	JTextField findTextField = new JTextField(20);
+	
 	
 	private JButton buttonRename = new JButton("Rename");
 	private JButton buttonCopy = new JButton("Copy");
-	private JButton buttonMove = new JButton("Move");
 	private JButton buttonRemoveVFS = new JButton("Remove VFS");
-	
-	
+	private JButton buttonRemoveFile = new JButton("Remove file");
+	private JButton buttonCreateVFS = new JButton("Create VFS");
+	private JButton buttonImport = new JButton("Import file structure"); 
+	private JButton buttonExport = new JButton("Export VFS");
+	private JButton buttonFind = new JButton("Find");
+	private JButton buttonHelp = new JButton("Help");
+
 	
 	
 	public Frame() throws NotInTreeException{
@@ -93,18 +107,31 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		
 		this.getContentPane().add(panLeft);
 		this.getContentPane().add(panUpRight);
-		panLeft.add(textField);
 		panLeft.add(buttonRename);
+		panLeft.add(renameTextField);
 		panLeft.add(buttonCopy);
-		panLeft.add(buttonMove);
+		panLeft.add(copyTextField);
+		panLeft.add(buttonExport);
+		panLeft.add(exportVFSTextField);
 		panLeft.add(buttonRemoveVFS);
+		panLeft.add(buttonRemoveFile);
+		panLeft.add(buttonImport);
+		panLeft.add(importFileStructureTextField);
 		panLeft.add(htmlPane);
 		panUpRight.add(tree);
 		panDownRight.add(new JLabel("salut"));
 		
 		tree.addTreeSelectionListener(new SelectionListener());
-		textField.addKeyListener(this);
-		buttonRename.addMouseListener(new RenameButtonListener());
+//		textField.addKeyListener(this);
+		buttonCopy.addMouseListener(new CopyButtonListener());
+		buttonRemoveVFS.addMouseListener(new RemoveVFSButtonListener());
+		buttonRemoveFile.addMouseListener(new RemoveFileButtonListener());
+		buttonCreateVFS.addMouseListener(new CreateVFSButtonListener());
+		buttonImport.addMouseListener(new ImportButtonListener());
+		buttonExport.addMouseListener(new ExportButtonListener());
+		buttonFind.addMouseListener(new FindButtonListener());
+		buttonHelp.addMouseListener(new HelpButtonListener());
+		buttonImport.addMouseListener(new ImportButtonListener());
 		
 		this.setVisible(true);
 		
@@ -171,14 +198,293 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		
 	}
 	
-	
-	
-	class CopyButtonListener implements MouseListener{
+	class FindButtonListener implements MouseListener{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	class HelpButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class ExportButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			String hostpath = exportVFSTextField.getText();
+			if (!hostpath.equals("")&& hostpath!=null){
+				CLUI.expvfs(vd.getName(), hostpath);
+			}
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	class ImportButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (treepath != null){
+					panUpRight.remove(tree);
+					String parent = TreeUtil.treePathToString(treepath);	
+					String hostpath = importFileStructureTextField.getText();
+					
+					CLUI.impvfs(hostpath,"vdlevel1", parent);
+					
+					try {
+						tree = TreeUtil.buildTreeFromVd(vd);
+					} catch (NotInTreeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					panUpRight.add(tree);
+					tree.addTreeSelectionListener(new SelectionListener());
+					revalidate();	
+					repaint();
+			}
+			else{
+				System.out.println("No file/directory selected");
+			}
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	class CopyButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+			
+
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class CreateVFSButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	class RemoveVFSButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class RemoveFileButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if (treepath != null){
+					panUpRight.remove(tree);
+					String oldPath = TreeUtil.treePathToString(treepath);	
+					
+					CLUI.rm("vdlevel1", oldPath);
+					try {
+						tree = TreeUtil.buildTreeFromVd(vd);
+					} catch (NotInTreeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					panUpRight.add(tree);
+					tree.addTreeSelectionListener(new SelectionListener());
+					revalidate();
+					repaint();
+			}
+			else{
+				System.out.println("No file/directory selected");
+			}
 		}
 
 		@Override
@@ -265,10 +571,10 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mousePressed(MouseEvent arg0) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-				if ((!textField.getText().equals("")) || (textField.getText()==null)){
+				if ((!renameTextField.getText().equals("")) && (renameTextField.getText()==null)){
 					panUpRight.remove(tree);
 					String oldPath = TreeUtil.treePathToString(treepath);	
-					String newPath = textField.getText();
+					String newPath = renameTextField.getText();
 					CLUI.mv("vdlevel1", oldPath, newPath);
 					try {
 						tree = TreeUtil.buildTreeFromVd(vd);
