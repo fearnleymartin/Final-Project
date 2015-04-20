@@ -38,7 +38,7 @@ public class Tree implements Serializable{
 		this.edgeList = edgeList;
 	}
 
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,9 +75,9 @@ public class Tree implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
+
+
+
 	// -----------------------------------------------------------------------------
 	// NODE/EDGE MANAGEMENT
 	// -----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ public class Tree implements Serializable{
 	public void addNode(Node n){
 		this.nodeList.add(n);
 	}
-	
+
 	public void addEdge(Edge e) throws ParentException, NotInTreeException{
 		// first we verify whether the endNode already has a predecessor. If it hasn't then you can add one
 		boolean test = true;
@@ -104,24 +104,24 @@ public class Tree implements Serializable{
 
 	}
 
-//	// this method is used by the VirtualDisk method deleteAll(String path)
-//	public void deleteAllAux(Node n) throws NotInTreeException{
-//		if(this.getNodeList().contains(n)){
-//			this.getNodeList().remove(n);
-//			// the edges linking the node to its successors/predecessor have to be removed too
-//			try{
-//				this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));}
-//			finally{
-//				List<Node> successors = new ArrayList<Node>();
-//				successors = this.getSuccessors(n);
-//				for (int i = 0; i<successors.size();i++){
-//					this.getEdgeList().remove(this.getEdgeFromNodes(n, successors.get(i)));
-//				}
-//			}
-//		}
-//		else 
-//			throw new NotInTreeException("Node "+n+" not in tree");
-//	}
+	//	// this method is used by the VirtualDisk method deleteAll(String path)
+	//	public void deleteAllAux(Node n) throws NotInTreeException{
+	//		if(this.getNodeList().contains(n)){
+	//			this.getNodeList().remove(n);
+	//			// the edges linking the node to its successors/predecessor have to be removed too
+	//			try{
+	//				this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));}
+	//			finally{
+	//				List<Node> successors = new ArrayList<Node>();
+	//				successors = this.getSuccessors(n);
+	//				for (int i = 0; i<successors.size();i++){
+	//					this.getEdgeList().remove(this.getEdgeFromNodes(n, successors.get(i)));
+	//				}
+	//			}
+	//		}
+	//		else 
+	//			throw new NotInTreeException("Node "+n+" not in tree");
+	//	}
 
 	// deletes a Node and all its successors
 	public void deleteAll(Node n) throws NotInTreeException{
@@ -133,13 +133,20 @@ public class Tree implements Serializable{
 		}
 	}
 
+	
 	// delete a Node which has no successors
 	public void deleteLeaf(Node n) throws NotInTreeException{
-		if (this.getSuccessors(n).size() == 0){
+		if (this.getSuccessors(n).size() == 0 && this.getPredecessor(n).size() != 0){
 			this.getNodeList().remove(n);
-			this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));
+			this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n).get(0), n));
 		}
+		else if (this.getSuccessors(n).size() == 0 && this.getPredecessor(n).size() == 0)
+			this.getNodeList().remove(n);
+		else
+			System.out.println("it's not a leaf, nothing's been deleted");
 	}
+	
+	
 
 	public void deleteEdge(Edge e) throws NotInTreeException{
 		if (this.getEdgeList().contains(e)){
@@ -163,49 +170,44 @@ public class Tree implements Serializable{
 	// -----------------------------------------------------------------------------
 	public List<Node> getSuccessors(Node n){	
 		List<Node> res = new ArrayList<Node>();
+		if (n instanceof Fichier)
+			return res;
+		else{
 			for (Edge e : edgeList){
-				if (e.getStartNode().equals(n)){
+				if (e.getStartNode().equals(n))
 					res.add(e.getEndNode());
-				}
 			}
+		}
 		return res;
 	}
+	
 
-	public Node getPredecessor(Node n) throws NotInTreeException{
+
+
+	// it has either one or zero predecessor
+	public List<Node> getPredecessor(Node n){
+		List<Node> predecessor = new ArrayList<Node>();
 		for (Edge e : edgeList){
 			if (e.getEndNode().equals(n))
-				return (e.getStartNode());
+				predecessor.add(e.getStartNode());
 		}
-		throw new NotInTreeException("the node " + n + " isn't part of the tree");
+		return	predecessor;
 	}
 
+	// REFACTOR ?
 	//return list of predecessors of a node
 	public List<Node> getListOfPredecessors(Node n){
 		List<Node> res = new ArrayList<Node>();
-		try{
-			Node prec=this.getPredecessor(n);
+		if (this.getPredecessor(n).size() != 0){
+			Node prec = this.getPredecessor(n).get(0);
 			res.add(prec);
-			res.addAll(getListOfPredecessors(prec));
-		} 
-		catch(NotInTreeException e) {
-			return new ArrayList<Node>();
+			res.addAll(this.getListOfPredecessors(prec));
 		}
 		return res;
 	}
-	
-	// SHOULD REPLACE THE ABOVE METHOD 
-//	//return list of predecessors of a node, i.e the list of all its ancestors
-//		public List<Node> getAllPredecessors(Node n){
-//			List<Node> res = new ArrayList<Node>();
-//			if (this.getPredecessor(n).size() != 0){
-//				Node prec = this.getPredecessor(n).get(0);
-//				res.add(prec);
-//				res.addAll(this.getAllPredecessors(prec));
-//			}
-//			return res;
-//		}
-	
-	
+
+
+
 	public List<Node> getAllSuccessorsAux(Node n, List<Node> successors){
 		if (this.getSuccessors(n).isEmpty())
 			return successors;
@@ -217,15 +219,16 @@ public class Tree implements Serializable{
 			return successors;
 		}
 	}
-	
+
 	public List<Node> getAllSuccessors(Node n){
 		return this.getAllSuccessorsAux(n, new ArrayList<Node>());}
-	
-	
+
+
 	// -----------------------------------------------------------------------------
 	// CONTAINS
 	// -----------------------------------------------------------------------------
 
+	// A CHANGER ?
 	// verifies whether the Node n is part of the tree or not
 	public boolean contains(Node n) {
 		if (this.nodeCount()==1)
@@ -265,13 +268,22 @@ public class Tree implements Serializable{
 	}
 
 
+	// A METTRE DANS VIRTUAL DISK
 	//moving a file hierarchy from one Folder to another
-	public void move(Node n, Directory parent ) throws NotInTreeException, ParentException{
-		Node prec = this.getPredecessor(n);
-		Edge edgeToDelete = getEdgeFromNodes(prec,n);
-		this.deleteEdge(edgeToDelete);
-		Edge edgeToAdd = new Edge(parent,n);
-		this.addEdge(edgeToAdd);
+	// remark : the parent shouldn't be a successor of the node
+	// ajouter une exception ?
+	public void move(Node n, Directory parent ) throws NotInTreeException, ParentException, ImpossibleDeplacementException{
+		if (this.getPredecessor(n).size() != 0 && !this.getAllSuccessors(n).contains(parent)){
+			Node prec = this.getPredecessor(n).get(0);
+			Edge edgeToDelete = getEdgeFromNodes(prec,n);
+			this.deleteEdge(edgeToDelete);
+			Edge edgeToAdd = new Edge(parent,n);
+			this.addEdge(edgeToAdd);
+		}
+		else if (this.getPredecessor(n).size() == 0 && !this.getAllSuccessors(n).contains(parent))
+			this.addEdge(new Edge(parent,n));
+		else
+			throw new ImpossibleDeplacementException();
 	}
 
 
