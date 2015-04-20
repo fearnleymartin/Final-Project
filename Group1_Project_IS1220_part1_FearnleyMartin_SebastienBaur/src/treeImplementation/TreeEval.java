@@ -1,11 +1,11 @@
-package graphImplementation;
+package treeImplementation;
 
 import dataTypes.*;
 
 
-public class GraphEval {
+public class TreeEval {
 	// for testing the graph type has been correctly implemented
-	public static void main(String[] args) throws NotInGraphException {
+	public static void main(String[] args) throws NotInTreeException, ParentException {
 
 		//		VirtualDisk vd = new VirtualDisk("vd","test_path",100000);
 		//		
@@ -27,7 +27,7 @@ public class GraphEval {
 		//		System.out.println(vd.getGraph().listContentsOfDirectory(dir1));
 
 
-		Graph g = new Graph();
+		Tree g = new Tree();
 		Directory d1 = new Directory("level1");
 		Directory d2 = new Directory("level21");
 		Directory d3 = new Directory("level22");

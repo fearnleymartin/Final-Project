@@ -1,8 +1,5 @@
 package Clients;
 
-import graphImplementation.Node;
-import graphImplementation.NotInGraphException;
-
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -24,6 +21,8 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import treeImplementation.Node;
+import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
 
 public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener{
@@ -47,7 +46,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JPanel panRight = new JPanel();
 	JScrollPane htmlView = new JScrollPane(htmlPane);
 	
-	public Frame() throws NotInGraphException{
+	public Frame() throws NotInTreeException{
 		VdcnManagement.getVdList().add(vdcn);
 		JFrame frame = new JFrame();
 		this.setTitle("VFS");
@@ -126,7 +125,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		CLUI.mv("vdlevel1", oldPath, newPath);
 		try {
 			tree = TreeUtil.buildTreeFromVd(vd);
-		} catch (NotInGraphException e) {
+		} catch (NotInTreeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

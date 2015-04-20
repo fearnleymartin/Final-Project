@@ -1,9 +1,8 @@
 package dataTypes.evals;
-import graphImplementation.*;
-
 import java.io.*;
 import java.util.*;
 
+import treeImplementation.*;
 import dataTypes.NoAvailableSpaceException;
 import dataTypes.NotADirectoryException;
 import dataTypes.VirtualDisk;
@@ -13,18 +12,19 @@ public class Eval_1 {
 
 	/**
 	 * @param args
-	 * @throws NotInGraphException 
+	 * @throws NotInTreeException 
 	 * @throws NoAvailableSpaceException 
 	 * @throws NotADirectoryException 
+	 * @throws ParentException 
 	 */
-	public static void main(String[] args) throws NotInGraphException, NoAvailableSpaceException, NotADirectoryException {
+	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException {
 
 		//--------------------------------------------------------------------------------
 		// CREATION OF A VIRTUAL DISK VD1, DISPLAY FREE SPACE AND INITIAL NODES
 		//--------------------------------------------------------------------------------
 		VirtualDisk vd = VirtualDisk.createVirtualDisk("vd1", "vd1.ser",10000000);
 		System.out.println("Free space: " +vd.queryFreeSpace());
-		System.out.println("List of nodes: " +vd.getGraph().getNodeList());
+		System.out.println("List of nodes: " +vd.getTree().getNodeList());
 
 
 
@@ -39,8 +39,8 @@ public class Eval_1 {
 		}
 
 		//checking if import has worked by checking the file and folders in graph as well as the available space
-		System.out.println("List of nodes: " + vd.getGraph().getNodeList());
-		System.out.println("List of edges: " + vd.getGraph().getEdgeList());
+		System.out.println("List of nodes: " + vd.getTree().getNodeList());
+		System.out.println("List of edges: " + vd.getTree().getEdgeList());
 		System.out.println("Free space: " +vd.queryFreeSpace());
 
 	
@@ -50,12 +50,12 @@ public class Eval_1 {
 		//--------------------------------------------------------------------------------
 		try{
 		System.out.println("result of search(test folder) : " + vd.search("test folder")); 
-		}catch(NotInGraphException e){
+		}catch(NotInTreeException e){
 			System.out.println("file not found");
 		}
 		try{
 			System.out.println("result of search(gibberish) : " + vd.search("gibberish")); 
-		}catch (NotInGraphException e){
+		}catch (NotInTreeException e){
 			System.out.println("file not found");
 		}
 

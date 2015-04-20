@@ -1,9 +1,8 @@
 package dataTypes.evals;
-import graphImplementation.*;
-
 import java.io.*;
 import java.util.*;
 
+import treeImplementation.*;
 import dataTypes.Directory;
 import dataTypes.Fichier;
 import dataTypes.NoAvailableSpaceException;
@@ -15,18 +14,19 @@ public class Eval_3 {
 
 	/**
 	 * @param args
-	 * @throws NotInGraphException 
+	 * @throws NotInTreeException 
 	 * @throws NoAvailableSpaceException 
 	 * @throws NotADirectoryException 
+	 * @throws ParentException 
 	 */
-	public static void main(String[] args) throws NotInGraphException, NoAvailableSpaceException, NotADirectoryException {
+	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException {
 
 		//--------------------------------------------------------------------------------
 		// CREATION OF A VIRTUAL DISK VD1, DISPLAY FREE SPACE AND INITIAL NODES
 		//--------------------------------------------------------------------------------
 		VirtualDisk vd = VirtualDisk.createVirtualDisk("vd3", "vd3.ser",1000);
 		System.out.println("Free space: " +vd.queryFreeSpace());
-		System.out.println("List of nodes: " +vd.getGraph().getNodeList());
+		System.out.println("List of nodes: " +vd.getTree().getNodeList());
 
 
 
@@ -72,14 +72,14 @@ public class Eval_3 {
 		// adding of a directory level 3 in directory level 2
 		Directory d = new Directory("level 3");
 		vd.addDirectory("Home/level 1/level 2", d);
-		System.out.println(vd.getGraph().getNodeList());
+		System.out.println(vd.getTree().getNodeList());
 		vd.exportDirectory("eval/Host/moving test/level 1/level 2", "Home/level 1/level 2/level 3");
 
 		// importing a file from the directory and adding it to another place in the directory (level 3)
 		Fichier f = new Fichier("test text.txt");
 		f.importFile("eval/Host/level 1/level 2/test text.txt");
 		vd.addFile("Home/level 1/level 2/level 3", f);
-		System.out.println(vd.getGraph().getNodeList());
+		System.out.println(vd.getTree().getNodeList());
 
 		vd.exportFile("eval/Host/moving test/level 1/test text.txt", "Home/level 1/level 2/level 3/test text.txt");
 	}

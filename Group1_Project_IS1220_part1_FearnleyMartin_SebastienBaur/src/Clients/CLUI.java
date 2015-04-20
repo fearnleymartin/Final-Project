@@ -2,8 +2,8 @@ package Clients;
 
 import java.util.*;
 
+import treeImplementation.*;
 import dataTypes.*;
-import graphImplementation.*;
 
 public class CLUI {
 	
@@ -31,7 +31,7 @@ public class CLUI {
 							}
 						}
 						break;
-					} catch (NotInGraphException e) {
+					} catch (NotInTreeException e) {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
@@ -46,13 +46,13 @@ public class CLUI {
 								System.out.println(n.getName()+"    "+((Fichier)n).getSize() + "    "+"f");
 							}
 							else{
-								Graph subGraph = vd.getSubGraph(vd.getPath(n));
-								long size = subGraph.getTotalFileSize();
+								Tree subTree = vd.getSubTree(vd.getPath(n));
+								long size = vd.getTotalFileSize(subTree);
 								System.out.println(n.getName()+"    "+ size+"     "+"d");
 							}
 						}
 						break;
-					} catch (NotInGraphException e) {
+					} catch (NotInTreeException e) {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
@@ -77,7 +77,7 @@ public class CLUI {
 							}
 						}
 						break;
-					} catch (NotInGraphException e) {
+					} catch (NotInTreeException e) {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
@@ -93,13 +93,13 @@ public class CLUI {
 								System.out.println(n.getName()+"    "+((Fichier)n).getSize() + "    "+"f");
 							}
 							else{
-								Graph subGraph = vd.getSubGraph(vd.getPath(n));
-								long size = subGraph.getTotalFileSize();
+								Tree subTree = vd.getSubTree(vd.getPath(n));
+								long size = vd.getTotalFileSize(subTree);
 								System.out.println(n.getName()+"    "+ size+"     "+"d");
 							}
 						}
 						break;
-					} catch (NotInGraphException e) {
+					} catch (NotInTreeException e) {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
@@ -133,7 +133,7 @@ public class CLUI {
 				nodeSpecified = vdcn.getVd().getNodeFromPath(pathname);
 				vdcn.setCurrentNode(nodeSpecified);
 				System.out.println("The current node is " + nodeSpecified);
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println(pathname + " not found");
 				e.printStackTrace();
 			}
@@ -164,7 +164,7 @@ public class CLUI {
 			String newName = str[str.length-1];		
 			try {
 				vdcn.getVd().rename(oldpath, newName);
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println(oldpath + " not found");
 				e.printStackTrace();
 			}
@@ -176,7 +176,7 @@ public class CLUI {
 	}
 
 	//doesn't work correctly !!!!!!!!!!
-	public static void cp(String vfsname, String sourcepath,String targetpath) throws VirtualDiskDoesntExistException, NotInGraphException, NotADirectoryException, NoAvailableSpaceException{
+	public static void cp(String vfsname, String sourcepath,String targetpath) throws VirtualDiskDoesntExistException, NotInTreeException, NotADirectoryException, NoAvailableSpaceException, ParentException{
 		VdAndCurrentNode vdcn= getVdACNFromVfsname(vfsname);
 		VirtualDisk vd = vdcn.getVd();
 		//change targetpath into parent path
@@ -191,7 +191,7 @@ public class CLUI {
 	}
 
 	//import file structure into vd
-	public static void impvfs(String hostpath,String vfsname, String vfspath) {
+	public static void impvfs(String hostpath,String vfsname, String vfspath) throws ParentException {
 		VdAndCurrentNode vdcn = null;
 		try {
 			vdcn = getVdACNFromVfsname(vfsname);
@@ -200,7 +200,7 @@ public class CLUI {
 				vd.importFileStructure(hostpath, vfspath);
 			} catch (NoAvailableSpaceException e) {
 				e.printStackTrace();
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println(vfspath + " not found");
 				e.printStackTrace();
 			} catch (NotADirectoryException e) {
@@ -210,7 +210,7 @@ public class CLUI {
 			System.out.println(hostpath + " imported into "+ vfsname);
 		} catch (VirtualDiskDoesntExistException e) {
 			System.out.println(vfsname +" doesn't exist");
-			
+
 		}
 		
 	}
@@ -223,7 +223,7 @@ public class CLUI {
 			VirtualDisk vd = vdcn.getVd();
 			try {
 				vd.exportDirectory(hostpath, "Home");
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println("Home directory has been deleted, cannot export the vfs as vfs is damaged");
 				e.printStackTrace();
 			}
@@ -269,7 +269,7 @@ public class CLUI {
 			VirtualDisk vd = vdcn.getVd();
 			try {
 				vd.deleteAll(pathname);
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println(pathname + " not found in "+ vfsname);
 				e.printStackTrace();
 			}
@@ -302,12 +302,12 @@ public class CLUI {
 				for (Node n : list){
 					try {
 						System.out.println(vd.getPath(n));
-					} catch (NotInGraphException e) {
+					} catch (NotInTreeException e) {
 						System.out.println("Cannot get the path of " +n.getName());
 						e.printStackTrace();
 					}
 				}
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.println(filename + " cannot be found in "+vfsname);
 				e.printStackTrace();
 			}
@@ -364,7 +364,7 @@ public class CLUI {
 			System.out.println("Syntax: free <vfsname>");
 			break;
 		case "find":
-			System.out.println("To search if a le named filename is stored in the VFS named vfsname, shall return the absolute path of the sought le if it is present in the VFS, null otherwise");
+			System.out.println("To search if a file named filename is stored in the VFS named vfsname, shall return the absolute path of the sought le if it is present in the VFS, null otherwise");
 			System.out.println("Syntax: find <vfsname> <filename>");
 			break;
 		case "help":
@@ -457,7 +457,7 @@ public class CLUI {
 	}
 	
 	//interprets the user input and calls the correct function (aftr pre treatment)
- 	public static void understand(String str) throws NumberFormatException, NotInGraphException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException{
+ 	public static void understand(String str) throws NumberFormatException, NotInTreeException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException, ParentException{
 		//pre-treat string
  		List<String> strList = preTreatment(str);
  		//create an array from list returned
@@ -579,7 +579,7 @@ public class CLUI {
 		}
 		}
 	
-	public static void main(String[] args) throws NotInGraphException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException{
+	public static void main(String[] args) throws NotInTreeException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException, ParentException{
 		//create vfs1
 		crvfs("vfs1",1000);
 		//create vfs2
@@ -593,7 +593,7 @@ public class CLUI {
 		//import level 1
 		impvfs("eval/Host/level 1","vfs1","Home");
 //		GenerateTree gt = new GenerateTree(getVdACNFromVfsname("vfs1").getVd());
-//		System.out.println(vfs1.getVd().getGraph().getNodeList());
+//		System.out.println(vfs1.getVd().getTree().getNodeList());
 //		//navigate to level 2
 //		cd("vfs1","Home/level 1/level 2");
 //		System.out.println(vfs1.getCurrentNode());

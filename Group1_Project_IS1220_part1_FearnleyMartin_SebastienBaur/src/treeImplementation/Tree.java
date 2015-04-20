@@ -1,12 +1,12 @@
-package graphImplementation;
+package treeImplementation;
 import java.io.Serializable;
 import java.util.*;
 
-import graphImplementation.*;
+import treeImplementation.*;
 import dataTypes.*;
 
 //using generic types that refer to the generic types of the nodes and edges
-public class Graph implements Serializable{
+public class Tree implements Serializable{
 
 
 	private  List<Node> nodeList = new ArrayList<Node>();
@@ -23,7 +23,7 @@ public class Graph implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Graph [nodeList=" + nodeList + ", edgeList=" + edgeList + "]";
+		return "Tree [nodeList=" + nodeList + ", edgeList=" + edgeList + "]";
 	}
 
 	public void setNodeList(List<Node> nodeList) {
@@ -58,7 +58,7 @@ public class Graph implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Graph other = (Graph) obj;
+		Tree other = (Tree) obj;
 		HashSet<Node> thisNodesSet = new HashSet<Node>(this.getNodeList());
 		HashSet<Edge> thisEdgesSet = new HashSet<Edge>(this.getEdgeList()); 
 		HashSet<Node> otherNodesSet = new HashSet<Node>(other.getNodeList());
@@ -86,34 +86,45 @@ public class Graph implements Serializable{
 		this.nodeList.add(n);
 	}
 	
-	public void addEdge(Edge e) throws NotInGraphException{
-		if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
-			this.edgeList.add(e);
+	public void addEdge(Edge e) throws ParentException, NotInTreeException{
+		// first we verify whether the endNode already has a predecessor. If it hasn't then you can add one
+		boolean test = true;
+		for (Edge edge : edgeList){
+			if (edge.getEndNode().equals(e.getEndNode()))
+				test = false;
+		}
+		if (test){
+			if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
+				this.edgeList.add(e);
+			else
+				throw new NotInTreeException("startNode or endNode of your edge isn't part of the nodeList of the tree");
+		}
 		else
-			throw new NotInGraphException("startNode or endNode of your edge isn't part of the nodeList of the graph");
+			throw new ParentException(e.getEndNode() + " already has a predecessor ! You can't add this edge");
+
 	}
 
-	// this method is used by the VirtualDisk method deleteAll(String path)
-	public void deleteAllAux(Node n) throws NotInGraphException{
-		if(this.getNodeList().contains(n)){
-			this.getNodeList().remove(n);
-			// the edges linking the node to its successors/predecessor have to be removed too
-			try{
-				this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));}
-			finally{
-				List<Node> successors = new ArrayList<Node>();
-				successors = this.getSuccessors(n);
-				for (int i = 0; i<successors.size();i++){
-					this.getEdgeList().remove(this.getEdgeFromNodes(n, successors.get(i)));
-				}
-			}
-		}
-		else 
-			throw new NotInGraphException("Node "+n+" not in graph");
-	}
+//	// this method is used by the VirtualDisk method deleteAll(String path)
+//	public void deleteAllAux(Node n) throws NotInTreeException{
+//		if(this.getNodeList().contains(n)){
+//			this.getNodeList().remove(n);
+//			// the edges linking the node to its successors/predecessor have to be removed too
+//			try{
+//				this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));}
+//			finally{
+//				List<Node> successors = new ArrayList<Node>();
+//				successors = this.getSuccessors(n);
+//				for (int i = 0; i<successors.size();i++){
+//					this.getEdgeList().remove(this.getEdgeFromNodes(n, successors.get(i)));
+//				}
+//			}
+//		}
+//		else 
+//			throw new NotInTreeException("Node "+n+" not in tree");
+//	}
 
 	// deletes a Node and all its successors
-	public void deleteAll(Node n) throws NotInGraphException{
+	public void deleteAll(Node n) throws NotInTreeException{
 		while (this.getNodeList().contains(n)){
 			if (this.getSuccessors(n).size() == 0)
 				this.deleteLeaf(n);
@@ -123,19 +134,19 @@ public class Graph implements Serializable{
 	}
 
 	// delete a Node which has no successors
-	public void deleteLeaf(Node n) throws NotInGraphException{
+	public void deleteLeaf(Node n) throws NotInTreeException{
 		if (this.getSuccessors(n).size() == 0){
 			this.getNodeList().remove(n);
 			this.getEdgeList().remove(this.getEdgeFromNodes(this.getPredecessor(n), n));
 		}
 	}
 
-	public void deleteEdge(Edge e) throws NotInGraphException{
+	public void deleteEdge(Edge e) throws NotInTreeException{
 		if (this.getEdgeList().contains(e)){
 			this.getEdgeList().remove(e);
 		}
 		else
-			throw new NotInGraphException("Edge " +e+ "is not in the graph");
+			throw new NotInTreeException("Edge " +e+ "is not in the tree");
 	}
 
 	public int nodeCount(){
@@ -160,12 +171,12 @@ public class Graph implements Serializable{
 		return res;
 	}
 
-	public Node getPredecessor(Node n) throws NotInGraphException{
+	public Node getPredecessor(Node n) throws NotInTreeException{
 		for (Edge e : edgeList){
 			if (e.getEndNode().equals(n))
 				return (e.getStartNode());
 		}
-		throw new NotInGraphException("the node " + n + " isn't part of the graph");
+		throw new NotInTreeException("the node " + n + " isn't part of the tree");
 	}
 
 	//return list of predecessors of a node
@@ -176,7 +187,7 @@ public class Graph implements Serializable{
 			res.add(prec);
 			res.addAll(getListOfPredecessors(prec));
 		} 
-		catch(NotInGraphException e) {
+		catch(NotInTreeException e) {
 			return new ArrayList<Node>();
 		}
 		return res;
@@ -186,7 +197,7 @@ public class Graph implements Serializable{
 	// CONTAINS
 	// -----------------------------------------------------------------------------
 
-	// verifies whether the Node n is part of the graph or not
+	// verifies whether the Node n is part of the tree or not
 	public boolean contains(Node n) {
 		if (this.nodeCount()==1)
 			return true;
@@ -197,38 +208,24 @@ public class Graph implements Serializable{
 	}
 
 
-	// -----------------------------------------------------------------------------
-	// GRAPH SIZE
-	// -----------------------------------------------------------------------------
 
-	//return the total file size of all files contained in graph
-	public long getTotalFileSize() {
-		long totalSize = 0;
-		for (Node n : this.getNodeList()){
-			if (n instanceof Fichier){
-				Fichier f = (Fichier) n;
-				totalSize = totalSize + f.getSize();
-			}
-		}
-		return totalSize;
-	}
 
 	// -----------------------------------------------------------------------------
-	// GRAPH REARRANGING (INTERNAL MOVING)
+	// TREE REARRANGING (INTERNAL MOVING)
 	// -----------------------------------------------------------------------------
 
 	// get edge from nodes
-	public Edge getEdgeFromNodes(Node start, Node end) throws NotInGraphException{
+	public Edge getEdgeFromNodes(Node start, Node end) throws NotInTreeException{
 		for (Edge e : this.getEdgeList()){
 			if ((e.getStartNode().equals(start))&&(e.getEndNode().equals(end))){
 				return e;
 			}	
 		}
-		throw new NotInGraphException();
+		throw new NotInTreeException();
 	}
 
 
-	//check graph contains edge
+	//check tree contains edge
 	public boolean containsEdge(Node start, Node end){
 		for (Edge e : this.getEdgeList()){
 			if ((e.getStartNode().equals(start)) && (e.getEndNode().equals(end))){
@@ -240,7 +237,7 @@ public class Graph implements Serializable{
 
 
 	//moving a file hierarchy from one Folder to another
-	public void move(Node n, Directory parent ) throws NotInGraphException{
+	public void move(Node n, Directory parent ) throws NotInTreeException, ParentException{
 		Node prec = this.getPredecessor(n);
 		Edge edgeToDelete = getEdgeFromNodes(prec,n);
 		this.deleteEdge(edgeToDelete);

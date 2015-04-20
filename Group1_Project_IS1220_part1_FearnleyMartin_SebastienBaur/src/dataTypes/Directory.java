@@ -2,7 +2,7 @@ package dataTypes;
 
 import java.io.Serializable;
 
-public class Directory extends graphImplementation.Node implements Serializable{
+public class Directory extends treeImplementation.Node implements Serializable, Visitable{
 
 
 
@@ -30,6 +30,16 @@ public class Directory extends graphImplementation.Node implements Serializable{
 	@Override
 	public String toString() {
 		return "Directory [" +name +"]";
+	}
+
+
+
+
+
+	@Override
+	public long accept(Visitor visitor) {
+		return visitor.visit(this);
+
 	}
 
 

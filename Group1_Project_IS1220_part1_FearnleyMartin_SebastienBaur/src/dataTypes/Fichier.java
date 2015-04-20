@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-public class Fichier extends graphImplementation.Node implements Serializable{
+public class Fichier extends treeImplementation.Node implements Serializable, Visitable{
 
 	protected String type;
 	protected long size;
@@ -133,6 +133,11 @@ public class Fichier extends graphImplementation.Node implements Serializable{
 				System.out.println("Error while closing stream: " + ioe);
 			}
 		}
+	}
+
+	@Override
+	public long accept(Visitor visitor) {
+		return visitor.visit(this);
 	}
 
 
