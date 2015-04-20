@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -14,16 +15,16 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.tree.TreePath;
 
+import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
-
-
+import Clients.*;
 
 public class Fenetre extends JFrame{
 
-	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
-	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
+VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
+VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
-JTree tree = TreeUtil.buildTreeFromVd(vd);
+JTree tree;
 TreePath treepath;
 JTextField renameTextField = new JTextField(20);
 JTextField copyTextField = new JTextField(20);
@@ -53,7 +54,9 @@ private JPanel panUpRight = new JPanel();
 private JPanel panDownRight = new JPanel();
 JScrollPane htmlView = new JScrollPane(htmlPane);
 
-public Fenetre(){             
+
+public Fenetre() throws NotInTreeException{
+	JTree tree = TreeUtil.buildTreeFromVd(vd);
 	this.setTitle("Ma première fenêtre Java");
 	this.setSize(400, 100);
 	this.setLocationRelativeTo(null);               
@@ -62,18 +65,27 @@ public Fenetre(){
 	//On définit le layout à utiliser sur le content pane
 	this.setLayout(new BorderLayout());
 
-	//Instanciation d'un objet JPanel
-	JPanel pan = new JPanel();
-	//Définition de sa couleur de fond
-	pan.setBackground(Color.ORANGE);        
-	//On prévient notre JFrame que notre JPanel sera son content pane
-	this.setContentPane(pan);    
+//	//Instanciation d'un objet JPanel
+//	JPanel pan = new JPanel();
+//	//Définition de sa couleur de fond
+//	pan.setBackground(Color.ORANGE);        
+//	//On prévient notre JFrame que notre JPanel sera son content pane
+//	this.setContentPane(pan);    
 
 	// ajout des panneaux aux bonnes positions
 	this.getContentPane().add(panLeft, BorderLayout.WEST);
 	this.getContentPane().add(panUpRight, BorderLayout.CENTER);
 	this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
+	panLeft.add(new GridLayout())
+	panLeft.add(renameTextField);
+	panLeft.add(buttonRename);
+	panLeft.add(buttonCopy);
+	panLeft.add(buttonRemove);
+	panLeft.add(htmlPane);
+	panUpRight.add(tree);
+	panDownRight.add(new JLabel("salut"));
+	
 	this.setVisible(true);
 
 }       
