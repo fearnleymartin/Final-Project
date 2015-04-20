@@ -198,6 +198,7 @@ public class CLUI {
 			VirtualDisk vd = vdcn.getVd();
 			try { 
 				vd.importFileStructure(hostpath, vfspath);
+				System.out.println(hostpath + " imported into "+ vfsname);
 			} catch (NoAvailableSpaceException e) {
 				e.printStackTrace();
 			} catch (NotInTreeException e) {
@@ -210,7 +211,6 @@ public class CLUI {
 				System.out.println("parent exception: file system you are importing is corrupted");
 				e.printStackTrace();
 			}
-			System.out.println(hostpath + " imported into "+ vfsname);
 		} catch (VirtualDiskDoesntExistException e) {
 			System.out.println(vfsname +" doesn't exist");
 

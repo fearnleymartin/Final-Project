@@ -95,12 +95,18 @@ public class Tree implements Serializable{
 		}
 		if (test){
 			if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
-				this.edgeList.add(e);
-			else
+				{this.edgeList.add(e);
+//				System.out.println("Entered if");
+				}
+			
+			else{
 				throw new NotInTreeException("startNode or endNode of your edge isn't part of the nodeList of the tree");
+			}
 		}
 		else
+			{
 			throw new ParentException(e.getEndNode() + " already has a predecessor ! You can't add this edge");
+			}
 
 	}
 
