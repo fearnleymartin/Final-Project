@@ -45,6 +45,22 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	
 	
+	public VirtualDisk getVd() {
+		return vd;
+	}
+
+	public void setVd(VirtualDisk vd) {
+		this.vd = vd;
+	}
+
+	public JTree getTree() {
+		return tree;
+	}
+
+	public void setTree(JTree tree) {
+		this.tree = tree;
+	}
+
 	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
 	private JPanel panUpRight = new JPanel();
@@ -54,9 +70,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	private JButton buttonRename = new JButton("Rename");
 	private JButton buttonCopy = new JButton("Copy");
-	private JButton buttonPaste = new JButton("Paste");
-	private JButton buttonRemove = new JButton("Remove");
-	private JButton buttonParent = new JButton("Parent");
+	private JButton buttonMove = new JButton("Move");
+	private JButton buttonRemoveVFS = new JButton("Remove VFS");
 	
 	
 	
@@ -81,29 +96,26 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(textField);
 		panLeft.add(buttonRename);
 		panLeft.add(buttonCopy);
-		panLeft.add(buttonPaste);
-		panLeft.add(buttonRemove);
-		panLeft.add(buttonParent);
+		panLeft.add(buttonMove);
+		panLeft.add(buttonRemoveVFS);
 		panLeft.add(htmlPane);
 		panUpRight.add(tree);
 		panDownRight.add(new JLabel("salut"));
 		
-		tree.addTreeSelectionListener(this);
+		tree.addTreeSelectionListener(new SelectionListener());
 		textField.addKeyListener(this);
-		buttonRename.addMouseListener(this);
+		buttonRename.addMouseListener(new RenameButtonListener());
 		
 		this.setVisible(true);
 		
 
 	}
 
+	
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		if (node == null) {return;}
-		
-		treepath = e.getPath();
-		htmlPane.setText( TreeUtil.treePathToString(treepath));
+//		treepath = e.getPath();
+//		htmlPane.setText( TreeUtil.treePathToString(treepath));
 }
 
 	@Override
@@ -131,28 +143,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		if (treepath != null){
-			if ((!textField.getText().equals("")) || (textField.getText()==null)){
-				panUpRight.remove(tree);
-				String oldPath = TreeUtil.treePathToString(treepath);	
-				String newPath = textField.getText();
-				CLUI.mv("vdlevel1", oldPath, newPath);
-				try {
-					this.tree = TreeUtil.buildTreeFromVd(this.vd);
-				} catch (NotInTreeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				panUpRight.add(tree);
-				tree.addTreeSelectionListener(this);
-				this.revalidate();
-				this.repaint();
-			}
-			else {System.out.println("Please enter a new name for the file/directory");}
-		}
-		else{
-			System.out.println("No file/directory selected");
-		}
 		
 	}
 
@@ -178,6 +168,141 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	class CopyButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class MoveButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class RenameButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			if (treepath != null){
+				if ((!textField.getText().equals("")) || (textField.getText()==null)){
+					panUpRight.remove(tree);
+					String oldPath = TreeUtil.treePathToString(treepath);	
+					String newPath = textField.getText();
+					CLUI.mv("vdlevel1", oldPath, newPath);
+					try {
+						tree = TreeUtil.buildTreeFromVd(vd);
+					} catch (NotInTreeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					panUpRight.add(tree);
+					tree.addTreeSelectionListener(new SelectionListener());
+					revalidate();
+					repaint();
+				}
+				else {System.out.println("Please enter a new name for the file/directory");}
+			}
+			else{
+				System.out.println("No file/directory selected");
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	}
+
+	class SelectionListener implements TreeSelectionListener{
+
+		@Override
+		public void valueChanged(TreeSelectionEvent arg0) {
+			treepath = arg0.getPath();
+			htmlPane.setText( TreeUtil.treePathToString(treepath));
+		}
 		
 	}
 }
