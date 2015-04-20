@@ -10,6 +10,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -40,7 +42,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
 	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
-	
 	
 	
 	JTree tree;
@@ -500,10 +501,23 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			
 		}
 
+		// PEUT ETRE CHANGER LA FACON D'OBTENIR LE DERNIER INDICE EN UTILISANT getVdACNFromVfsname au cas où multithread
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
+			// ordre des arguments : name capacity
+			String enteredText = createVFSTextField.getText();
+			List<String> splitEnteredText = CLUI.preTreatment(enteredText);
+			CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
+			VirtualDisk vd = VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
+			JPanel vdContent = new JPanel();
+			JTree arbre = new JTree();
+			try {
+				arbre = TreeUtil.buildTreeFromVd(vd);
+				tabbedPanUpRight.addTab(vd.getName(), arbre);
+			} catch (NotInTreeException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 	}

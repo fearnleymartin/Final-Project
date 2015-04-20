@@ -112,6 +112,8 @@ public Fenetre() throws NotInTreeException{
 	
 	panUpRight.add(tree);
 	tabbedPanUpRight.addTab("vfs1",panUpRight);
+	tabbedPanUpRight.addTab("vfs2",new JLabel("salut"));
+
 	
     Box b = Box.createVerticalBox();
     Box lineWriting = Box.createHorizontalBox();
