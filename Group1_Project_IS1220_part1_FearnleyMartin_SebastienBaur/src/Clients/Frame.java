@@ -28,6 +28,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import treeImplementation.Edge;
 import treeImplementation.Node;
 import treeImplementation.NotInTreeException;
 import treeImplementation.ParentException;
@@ -46,6 +47,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	JTree tree;
 	TreePath treepath=null;
 	Tree tempTree=null;
+	Node tempNode=null;
 	
 	public VirtualDisk getVd() {
 		return vd;
@@ -64,7 +66,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	}
 
 	private JTextField commandLinePrinting = new JTextField(20);
-	private JTextField commandLineWriting = new JTextField(20);
+	private JEditorPane commandLineWriting = new JEditorPane();
 	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
 	private JPanel panUpRight = new JPanel();
@@ -157,6 +159,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		tree.addTreeSelectionListener(new SelectionListener());
 		buttonRename.addMouseListener(new RenameButtonListener());
 		buttonCopy.addMouseListener(new CopyButtonListener());
+		buttonPaste.addMouseListener(new PasteButtonListener());
 		buttonRemoveVFS.addMouseListener(new RemoveVFSButtonListener());
 		buttonRemoveFile.addMouseListener(new RemoveFileButtonListener());
 		buttonCreateVFS.addMouseListener(new CreateVFSButtonListener());
@@ -398,6 +401,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				String path = TreeUtil.treePathToString(treepath);
 				try {
 					tempTree = vd.getSubTree(path);
+					tempNode = vd.getNodeFromPath(path);
 					System.out.println(path + " has been copied");
 				} catch (NotInTreeException e1) {
 					System.out.println("path doesn't exists");
@@ -444,9 +448,44 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			if (tempTree!=null){
-				
+			if (treepath != null){
+				String parent = TreeUtil.treePathToString(treepath);
+				if (tempTree!=null && tempNode!=null){
+					Tree subTree = tempTree;
+			        Tree subTreeCopy = new Tree();
+					subTreeCopy.setNodeList(subTree.getNodeList());
+			        subTreeCopy.setEdgeList(subTree.getEdgeList());
+			        if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
+			               for (Node n : subTreeCopy.getNodeList()){
+			                      vd.getTree().addNode(n);
+			               }
+			               for(Edge e : subTreeCopy.getEdgeList()){
+			                      try {
+									vd.getTree().addEdge(e);
+								} catch (ParentException e1) {
+									
+									e1.printStackTrace();
+								} catch (NotInTreeException e1) {
+									
+									e1.printStackTrace();
+								}
+			               }
+			                
+			               try {
+							vd.getTree().addEdge(new Edge(vd.getNodeFromPath(parent),tempNode));
+						} catch (ParentException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (NotInTreeException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			        }
+			        else {commandLinePrinting.setText("Not enough available space in virtual disk");}
+				}
+				else{commandLinePrinting.setText("Please copy something first");}
 			}
+			else{commandLinePrinting.setText("Please select a place to copy to on the tree");}
 		}
 
 		@Override
