@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -18,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -29,6 +31,7 @@ import javax.swing.tree.TreePath;
 import treeImplementation.Node;
 import treeImplementation.NotInTreeException;
 import treeImplementation.ParentException;
+import treeImplementation.Tree;
 import dataTypes.VirtualDisk;
 
 public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener, KeyListener{
@@ -42,9 +45,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	JTree tree;
 	TreePath treepath=null;
-
-	
-	
+	Tree tempTree=null;
 	
 	public VirtualDisk getVd() {
 		return vd;
@@ -62,10 +63,13 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		this.tree = tree;
 	}
 
+	private JTextField commandLinePrinting = new JTextField(20);
+	private JTextField commandLineWriting = new JTextField(20);
 	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
 	private JPanel panUpRight = new JPanel();
 	private JPanel panDownRight = new JPanel();
+	private JTabbedPane tabbedPanUpRight = new JTabbedPane();
 	JScrollPane htmlView = new JScrollPane(htmlPane);
 	
 	//text fields
@@ -94,10 +98,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		tree = TreeUtil.buildTreeFromVd(vd);
 		VdcnManagement.getVdList().add(vdcn);
 		
+		this.setResizable(false);
+		this.setSize(1000, 500);
 		
 		JFrame frame = new JFrame();
 		this.setTitle("VFS");
-		this.setSize(600, 400);
+		
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -107,31 +113,46 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		
 		// ajout des panneaux aux bonnes positions
 		this.getContentPane().add(panLeft, BorderLayout.WEST);
-		this.getContentPane().add(panUpRight, BorderLayout.CENTER);
+		this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
 		this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 		
-		panLeft.setLayout(new GridLayout(8,2));
-		
-
-		panLeft.add(buttonFind);
-		panLeft.add(findTextField);
-		
-		panUpRight.add(tree);
-		panDownRight.add(new JLabel("salut"));
+		panLeft.setLayout(new GridLayout(10,2));
 		
 		panLeft.add(buttonRename);
 		panLeft.add(renameTextField);
-		panLeft.add(buttonCopy);
-		panLeft.add(copyTextField);
-		panLeft.add(buttonExport);
-		panLeft.add(exportVFSTextField);
-		panLeft.add(buttonRemoveVFS);
-		panLeft.add(buttonRemoveFile);
+		panLeft.add(buttonCreateVFS);
+		panLeft.add(createVFSTextField);
 		panLeft.add(buttonImport);
 		panLeft.add(importFileStructureTextField);
-		panLeft.add(htmlPane);
+		panLeft.add(buttonExport);
+		panLeft.add(exportVFSTextField);
+		panLeft.add(buttonFind);
+		panLeft.add(findTextField);
+		panLeft.add(buttonCopy);
+		panLeft.add(new JPanel());
+		panLeft.add(buttonPaste);
+		panLeft.add(new JPanel());
+		panLeft.add(buttonRemoveFile);
+		panLeft.add(new JPanel());
+		panLeft.add(buttonRemoveVFS);
+		panLeft.add(new JPanel());
+		panLeft.add(buttonHelp);
+		
 		panUpRight.add(tree);
-		panDownRight.add(new JLabel("salut"));
+		tabbedPanUpRight.addTab("vfs1",panUpRight);
+	
+		
+	    Box b = Box.createVerticalBox();
+	    Box lineWriting = Box.createHorizontalBox();
+	    lineWriting.add(new JLabel("Write here : "));
+	    lineWriting.add(commandLineWriting);
+	    b.add(lineWriting);
+	    Box lineReading = Box.createHorizontalBox();
+	    lineReading.add(new JLabel("Read here : "));
+	    lineReading.add(commandLinePrinting);
+	    b.add(lineReading);
+		panDownRight.add(b);
+		
 		
 		tree.addTreeSelectionListener(new SelectionListener());
 		buttonRename.addMouseListener(new RenameButtonListener());
@@ -373,7 +394,21 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
+			if (treepath != null){
+				String path = TreeUtil.treePathToString(treepath);
+				try {
+					tempTree = vd.getSubTree(path);
+					System.out.println(path + " has been copied");
+				} catch (NotInTreeException e1) {
+					System.out.println("path doesn't exists");
+					e1.printStackTrace();
+				}
+			}
+				
+				
+			else{
+				System.out.println("No file/directory selected");
+			}
 			
 		}
 			
@@ -405,6 +440,40 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		
 	}
 	
+	class PasteButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			if (tempTree!=null){
+				
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	class CreateVFSButtonListener implements MouseListener{
 
 		@Override
