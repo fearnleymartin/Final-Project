@@ -18,8 +18,8 @@ import dataTypes.Fichier;
 
 public class TreeTest {
 
-       Tree g1 = new Tree();
-       Tree g2 = new Tree();
+       Tree t1 = new Tree();
+       Tree t2 = new Tree();
        Directory d1 = new Directory("d1");
        Directory d2 = new Directory("d2");
        Directory d3 = new Directory("d3");
@@ -61,54 +61,54 @@ public class TreeTest {
 
        @Test
        public void testDeleteAll() throws ParentException {     
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              
-             g2.addNode(d1); g2.addNode(f1);   g2.addNode(d3);     g2.addNode(d5);       g2.addNode(f3);     g2.addNode(f4);            
+             t2.addNode(d1); t2.addNode(f1);   t2.addNode(d3);     t2.addNode(d5);       t2.addNode(f3);     t2.addNode(f4);            
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);       g1.addEdge(e10);g1.addEdge(e11);               
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);       t1.addEdge(e10);t1.addEdge(e11);               
                     
-                    g2.addEdge(e2);     g2.addEdge(e3);     g2.addEdge(e4);     g2.addEdge(e5);       g2.addEdge(e6);            
+                    t2.addEdge(e2);     t2.addEdge(e3);     t2.addEdge(e4);     t2.addEdge(e5);       t2.addEdge(e6);            
                     
-                    g1.deleteAll(d2);
+                    t1.deleteAll(d2);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
-             assertEquals(g1,g2);       
+             assertEquals(t1,t2);       
        }
 
        
        @Test
        public void testDeleteLeaf() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              
-             g2.addNode(d1);     g2.addNode(d2);     g2.addNode(d3);     g2.addNode(d4);       g2.addNode(d5);     g2.addNode(d6);     g2.addNode(f1);
-             g2.addNode(f2);     g2.addNode(f3);     g2.addNode(f4);     g2.addNode(f5);
+             t2.addNode(d1);     t2.addNode(d2);     t2.addNode(d3);     t2.addNode(d4);       t2.addNode(d5);     t2.addNode(d6);     t2.addNode(f1);
+             t2.addNode(f2);     t2.addNode(f3);     t2.addNode(f4);     t2.addNode(f5);
              
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
                     
-                    g2.addEdge(e1);     g2.addEdge(e2);     g2.addEdge(e3);     g2.addEdge(e4);       g2.addEdge(e5);     g2.addEdge(e6);
-                    g2.addEdge(e7);     g2.addEdge(e8);     g2.addEdge(e9);     g2.addEdge(e11);
+                    t2.addEdge(e1);     t2.addEdge(e2);     t2.addEdge(e3);     t2.addEdge(e4);       t2.addEdge(e5);     t2.addEdge(e6);
+                    t2.addEdge(e7);     t2.addEdge(e8);     t2.addEdge(e9);     t2.addEdge(e11);
                     
-                    g1.deleteLeaf(f6);
+                    t1.deleteLeaf(f6);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
-             assertEquals(g1,g2);
+             assertEquals(t1,t2);
        }
 
        
        @Test
        public void testGetSuccessors() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
                     
              } catch (NotInTreeException e) {
                     e.printStackTrace();
@@ -117,33 +117,33 @@ public class TreeTest {
              nodes.add(f6); nodes.add(f5); nodes.add(d6);
              // the order is unimportant so that we transform the lists into sets to compare the two
              HashSet<Node> nodesSet = new HashSet<Node>(nodes);
-             HashSet<Node> expected = new HashSet<Node>(g1.getSuccessors(d4));
+             HashSet<Node> expected = new HashSet<Node>(t1.getSuccessors(d4));
              assertEquals(expected,nodesSet);
        }
        
 
        @Test
        public void testGetPredecessor() throws NotInTreeException, ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              Directory d = new Directory("d4");
-             assertEquals(d,g1.getPredecessor(f6));
+             assertEquals(d,t1.getPredecessor(f6));
        }
 
        
        @Test
        public void testGetListOfPredecessors() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
@@ -151,17 +151,17 @@ public class TreeTest {
              nodes.add(d4);
              nodes.add(d2);
              nodes.add(d1);
-             assertEquals(nodes, g1.getListOfPredecessors(f6));
+             assertEquals(nodes, t1.getListOfPredecessors(f6));
        }
 
        
        @Test
        public void testContains() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
@@ -169,17 +169,17 @@ public class TreeTest {
              // this problem is avoided in the virtual disk since every graph has a base folder called "Home"
              // that way, the graph of the VD doesn't contain the Home folder the way we defined it, but it
              // contains all its sons
-             assertTrue(g1.contains(d2));
+             assertTrue(t1.contains(d2));
        }
 
        
        @Test
        public void testGetEdgeFromNodes() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
@@ -190,39 +190,39 @@ public class TreeTest {
        
        @Test
        public void testContainsEdge() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
-             assertTrue(g1.containsEdge(d1,d2));
+             assertTrue(t1.containsEdge(d1,d2));
        }
 
        
        @Test
-       public void testMove() throws ParentException {
-             g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
-             g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
+       public void testMove() throws ParentException, ImpossibleDeplacementException {
+             t1.addNode(d1);     t1.addNode(d2);     t1.addNode(d3);     t1.addNode(d4);       t1.addNode(d5);     t1.addNode(d6);     t1.addNode(f1);
+             t1.addNode(f2);     t1.addNode(f3);     t1.addNode(f4);     t1.addNode(f5);       t1.addNode(f6);
              
-             g2.addNode(d1);     g2.addNode(d2);     g2.addNode(d3);     g2.addNode(d4);       g2.addNode(d5);     g2.addNode(d6);     g2.addNode(f1);
-             g2.addNode(f2);     g2.addNode(f3);     g2.addNode(f4);     g2.addNode(f5);       g2.addNode(f6); g2.addNode(d4); g2.addNode(d6);
-             g2.addNode(f6); g2.addNode(f5);
+             t2.addNode(d1);     t2.addNode(d2);     t2.addNode(d3);     t2.addNode(d4);       t2.addNode(d5);     t2.addNode(d6);     t2.addNode(f1);
+             t2.addNode(f2);     t2.addNode(f3);     t2.addNode(f4);     t2.addNode(f5);       t2.addNode(f6); t2.addNode(d4); t2.addNode(d6);
+             t2.addNode(f6); t2.addNode(f5);
              try {
-                    g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
-                    g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
+                    t1.addEdge(e1);     t1.addEdge(e2);     t1.addEdge(e3);     t1.addEdge(e4);       t1.addEdge(e5);     t1.addEdge(e6);
+                    t1.addEdge(e7);     t1.addEdge(e8);     t1.addEdge(e9);     t1.addEdge(e10); t1.addEdge(e11);
                     
-                    g2.addEdge(e1);     g2.addEdge(e2);     g2.addEdge(e3);     g2.addEdge(e4);       g2.addEdge(e5);     g2.addEdge(e6);
-                    g2.addEdge(e7);     g2.addEdge(e9);     g2.addEdge(e10); g2.addEdge(e11);
-                    g2.addEdge(new Edge(d5,d4)); 
+                    t2.addEdge(e1);     t2.addEdge(e2);     t2.addEdge(e3);     t2.addEdge(e4);       t2.addEdge(e5);     t2.addEdge(e6);
+                    t2.addEdge(e7);     t2.addEdge(e9);     t2.addEdge(e10); t2.addEdge(e11);
+                    t2.addEdge(new Edge(d5,d4)); 
                     
-                    g1.move(d4, d5);
+                    t1.move(d4, d5);
              } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
-             assertEquals(g1,g2);
+             assertEquals(t1,t2);
        }
 
 }

@@ -16,8 +16,9 @@ public class Eval_2 {
 	 * @throws NoAvailableSpaceException 
 	 * @throws NotADirectoryException 
 	 * @throws ParentException 
+	 * @throws ImpossibleDeplacementException 
 	 */
-	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException {
+	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException, ImpossibleDeplacementException {
 
 		//--------------------------------------------------------------------------------
 		// CREATION OF A VIRTUAL DISK VD1, DISPLAY FREE SPACE AND INITIAL NODES
