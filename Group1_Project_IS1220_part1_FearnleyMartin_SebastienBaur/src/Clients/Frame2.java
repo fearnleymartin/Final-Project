@@ -70,12 +70,15 @@ public class Frame2 extends JFrame implements TreeSelectionListener, ActionListe
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		this.setLayout(new GridLayout(0,2));
+//		this.setLayout(new GridLayout(0,2));
 
 		htmlPane.setEditable(false);
 
+		panDownRight.setLocation(100,300);
+		panUpRight.setLocation(100,0);
 		this.getContentPane().add(panLeft);
 		this.getContentPane().add(panUpRight);
+		this.getContentPane().add(panDownRight);
 		panLeft.add(textField);
 		panLeft.add(buttonRename);
 		panLeft.add(buttonCopy);
@@ -85,7 +88,7 @@ public class Frame2 extends JFrame implements TreeSelectionListener, ActionListe
 		panLeft.add(htmlPane);
 		panUpRight.add(tree);
 		panDownRight.add(new JLabel("salut"));
-
+		
 		tree.addTreeSelectionListener(this);
 		textField.addActionListener(this);
 		buttonRename.addMouseListener(this);
