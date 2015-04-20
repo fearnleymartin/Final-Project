@@ -130,10 +130,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.setVisible(true);
-		validate();
-		repaint();
 		
+		this.setVisible(true);
+		this.revalidate();
+		this.repaint();
+		tree.updateUI();
+		System.out.println(vd.getGraph().getNodeList());
 		
 	}
 
