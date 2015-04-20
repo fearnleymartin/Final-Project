@@ -1,7 +1,7 @@
 package Clients;
 
-import graphImplementation.Node;
-import graphImplementation.NotInGraphException;
+import treeImplementation.Node;
+import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
 
 	public class VdAndCurrentNode {
@@ -13,7 +13,7 @@ import dataTypes.VirtualDisk;
 			super();
 			try {
 				this.currentNode = vd.getNodeFromPath("Home");
-			} catch (NotInGraphException e) {
+			} catch (NotInTreeException e) {
 				System.out.print("This vd contains no Home node");
 				e.printStackTrace();
 			}

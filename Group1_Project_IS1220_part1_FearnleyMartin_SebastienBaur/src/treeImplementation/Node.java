@@ -1,4 +1,4 @@
-package graphImplementation;
+package treeImplementation;
 
 import java.io.Serializable;
 

@@ -1,9 +1,8 @@
 package dataTypes.evals;
-import graphImplementation.*;
-
 import java.io.*;
 import java.util.*;
 
+import treeImplementation.*;
 import dataTypes.NoAvailableSpaceException;
 import dataTypes.NotADirectoryException;
 import dataTypes.VirtualDisk;
@@ -13,20 +12,20 @@ public class Eval_4 {
 
 	/**
 	 * @param args
-	 * @throws NotInGraphException 
+	 * @throws NotInTreeException 
 	 * @throws NoAvailableSpaceException 
 	 * @throws NotADirectoryException 
 	 */
-	public static void main(String[] args) throws NotInGraphException, NoAvailableSpaceException, NotADirectoryException {
+	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException {
 
 		//--------------------------------------------------------------------------------
 		// CREATION OF A VIRTUAL DISK VD, DISPLAY FREE SPACE AND INITIAL NODES AND EDGES, TEST OF SUBGRAPH
 		//--------------------------------------------------------------------------------
 		VirtualDisk vd = VirtualDisk.loadVirtualDisk("eval/vd1.ser");
 		System.out.println("Free space: " +vd.queryFreeSpace());
-		System.out.println("List of nodes: " +vd.getGraph().getNodeList());
-		System.out.println("List of edges: " +vd.getGraph().getEdgeList());
-		System.out.println(vd.getSubGraph("Home/level 1"));	
+		System.out.println("List of nodes: " +vd.getTree().getNodeList());
+		System.out.println("List of edges: " +vd.getTree().getEdgeList());
+		System.out.println(vd.getSubTree("Home/level 1"));	
 
 	}
 

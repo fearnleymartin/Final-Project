@@ -6,21 +6,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import graphImplementation.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import treeImplementation.*;
 import dataTypes.Directory;
 import dataTypes.Fichier;
 
 
 
-public class GraphTest {
+public class TreeTest {
 
-       Graph g1 = new Graph();
-       Graph g2 = new Graph();
+       Tree g1 = new Tree();
+       Tree g2 = new Tree();
        Directory d1 = new Directory("d1");
        Directory d2 = new Directory("d2");
        Directory d3 = new Directory("d3");
@@ -61,7 +60,7 @@ public class GraphTest {
              
 
        @Test
-       public void testDeleteAll() {     
+       public void testDeleteAll() throws ParentException {     
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              
@@ -73,7 +72,7 @@ public class GraphTest {
                     g2.addEdge(e2);     g2.addEdge(e3);     g2.addEdge(e4);     g2.addEdge(e5);       g2.addEdge(e6);            
                     
                     g1.deleteAll(d2);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              assertEquals(g1,g2);       
@@ -81,7 +80,7 @@ public class GraphTest {
 
        
        @Test
-       public void testDeleteLeaf() {
+       public void testDeleteLeaf() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              
@@ -96,7 +95,7 @@ public class GraphTest {
                     g2.addEdge(e7);     g2.addEdge(e8);     g2.addEdge(e9);     g2.addEdge(e11);
                     
                     g1.deleteLeaf(f6);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              assertEquals(g1,g2);
@@ -104,14 +103,14 @@ public class GraphTest {
 
        
        @Test
-       public void testGetSuccessors() {
+       public void testGetSuccessors() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
                     
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              List<Node> nodes = new ArrayList<Node>();
@@ -124,13 +123,13 @@ public class GraphTest {
        
 
        @Test
-       public void testGetPredecessor() throws NotInGraphException {
+       public void testGetPredecessor() throws NotInTreeException, ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              Directory d = new Directory("d4");
@@ -139,13 +138,13 @@ public class GraphTest {
 
        
        @Test
-       public void testGetListOfPredecessors() {
+       public void testGetListOfPredecessors() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              List<Node> nodes = new ArrayList<Node>();
@@ -157,13 +156,13 @@ public class GraphTest {
 
        
        @Test
-       public void testContains() {
+       public void testContains() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              // remark : it doesn't work for d1 since it has no predecessor
@@ -175,13 +174,13 @@ public class GraphTest {
 
        
        @Test
-       public void testGetEdgeFromNodes() {
+       public void testGetEdgeFromNodes() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              Edge e = new Edge(d3,d5);
@@ -190,13 +189,13 @@ public class GraphTest {
 
        
        @Test
-       public void testContainsEdge() {
+       public void testContainsEdge() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              try {
                     g1.addEdge(e1);     g1.addEdge(e2);     g1.addEdge(e3);     g1.addEdge(e4);       g1.addEdge(e5);     g1.addEdge(e6);
                     g1.addEdge(e7);     g1.addEdge(e8);     g1.addEdge(e9);     g1.addEdge(e10); g1.addEdge(e11);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              assertTrue(g1.containsEdge(d1,d2));
@@ -204,7 +203,7 @@ public class GraphTest {
 
        
        @Test
-       public void testMove() {
+       public void testMove() throws ParentException {
              g1.addNode(d1);     g1.addNode(d2);     g1.addNode(d3);     g1.addNode(d4);       g1.addNode(d5);     g1.addNode(d6);     g1.addNode(f1);
              g1.addNode(f2);     g1.addNode(f3);     g1.addNode(f4);     g1.addNode(f5);       g1.addNode(f6);
              
@@ -220,7 +219,7 @@ public class GraphTest {
                     g2.addEdge(new Edge(d5,d4)); 
                     
                     g1.move(d4, d5);
-             } catch (NotInGraphException e) {
+             } catch (NotInTreeException e) {
                     e.printStackTrace();
              }
              assertEquals(g1,g2);

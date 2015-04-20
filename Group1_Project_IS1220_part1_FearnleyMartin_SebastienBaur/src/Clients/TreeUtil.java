@@ -1,9 +1,5 @@
 package Clients;
 
-import graphImplementation.Graph;
-import graphImplementation.Node;
-import graphImplementation.NotInGraphException;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +11,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import treeImplementation.Tree;
+import treeImplementation.Node;
+import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
 
 public class TreeUtil {
@@ -67,15 +66,15 @@ public class TreeUtil {
         return index;
     }
 
-    protected static JTree buildTreeFromVd(VirtualDisk vd) throws NotInGraphException{
+    protected static JTree buildTreeFromVd(VirtualDisk vd) throws NotInTreeException{
     	
     	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Home");
         
         DefaultTreeModel model = new DefaultTreeModel(root);
         JTree tree = new JTree(model);
         
-    	Graph graph = vd.getGraph();
-        List<Node> nodeList = graph.getNodeList();
+    	Tree treeVD = vd.getTree();
+        List<Node> nodeList = treeVD.getNodeList();
         List<String> pathList = new ArrayList<String>();
         for (Node n : nodeList){
         	pathList.add(vd.getPath(n));

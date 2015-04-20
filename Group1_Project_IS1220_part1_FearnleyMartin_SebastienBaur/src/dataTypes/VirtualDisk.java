@@ -4,13 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import graphImplementation.*;
+import treeImplementation.*;
 
-public class VirtualDisk implements Serializable {
+public class VirtualDisk implements Serializable, Visitor {
 
 	private int capacity;
 	private String name;
-	private graphImplementation.Graph graph = new Graph();
+	private Tree tree = new Tree();
 	private String path;
 
 	// -----------------------------------------------------------------------------
@@ -26,7 +26,7 @@ public class VirtualDisk implements Serializable {
 		else{
 			System.out.println("You can't have a negative capacity");}
 		this.path = path;
-		this.graph = new Graph();
+		this.tree = new Tree();
 	}
 
 	public VirtualDisk() {
@@ -75,48 +75,48 @@ public class VirtualDisk implements Serializable {
 	// -----------------------------------------------------------------------------
 
 	// delete the file lying at the indicated path if it is a file, and the directory as well as all his sons if it's a directory
-	public void deleteAll(String path) throws NotInGraphException{
+	public void deleteAll(String path) throws NotInTreeException{
 		Node n = this.getNodeFromPath(path);
-		this.getGraph().deleteAll(n);
+		this.getTree().deleteAll(n);
 	}
 
-	//adds a directory to the graph from a Directory object
-	public void addDirectory(String parentLocation, Directory directory) throws NotADirectoryException{
+	//adds a directory to the tree from a Directory object
+	public void addDirectory(String parentLocation, Directory directory) throws NotADirectoryException, ParentException{
 		try {
 			if (this.getNodeFromPath(parentLocation) instanceof Directory){
 				Directory parent = (Directory) this.getNodeFromPath(parentLocation);
-				this.getGraph().addNode(directory);
-				this.getGraph().addEdge(new Edge(parent,directory));
+				this.getTree().addNode(directory);
+				this.getTree().addEdge(new Edge(parent,directory));
 			}
 			else
 				throw new NotADirectoryException();
-		} catch (NotInGraphException e) {
+		} catch (NotInTreeException e) {
 			e.printStackTrace();
 		} 
 	}
 
-	//adds a node to the graph from a Fichier object
-	public void addFile(String parentLocation, Fichier fichier) throws NotADirectoryException, NoAvailableSpaceException{
+	//adds a node to the tree from a Fichier object
+	public void addFile(String parentLocation, Fichier fichier) throws NotADirectoryException, NoAvailableSpaceException, ParentException{
         try{
                if (this.getNodeFromPath(parentLocation) instanceof Directory){
                       if( fichier.getSize() < this.queryFreeSpace()){
                              Directory parent = (Directory) this.getNodeFromPath(parentLocation);
-                             this.graph.addNode(fichier);
-                             this.graph.addEdge(new Edge(parent,fichier));
+                             this.tree.addNode(fichier);
+                             this.tree.addEdge(new Edge(parent,fichier));
                       }
                       else
                              throw new NoAvailableSpaceException("there is not enough space in the disk");
                }
                else
                       throw new NotADirectoryException();
-        } catch (NotInGraphException e) {
+        } catch (NotInTreeException e) {
                e.printStackTrace();
         } 
   }
 
 
 
-	public void rename(String filePath, String newName) throws NotInGraphException{
+	public void rename(String filePath, String newName) throws NotInTreeException{
 		Node node = this.getNodeFromPath(filePath);
 		node.setName(newName);
 	}
@@ -135,7 +135,7 @@ public class VirtualDisk implements Serializable {
 	// the user should use this static method to create a virtual disk. This method creates a base folder called home
 	public static VirtualDisk createVirtualDisk(String name, String path, int capacity){
 		VirtualDisk vd = new VirtualDisk(name,path,capacity);
-		vd.getGraph().addNode(new Directory("Home"));
+		vd.getTree().addNode(new Directory("Home"));
 		vd.saveVirtualDisk();
 		return vd;
 	}
@@ -147,8 +147,8 @@ public class VirtualDisk implements Serializable {
 	// -----------------------------------------------------------------------------
 
 	//for importing a new file structure into the existing structure form the computer(a file or a directory and all its sons)
-	//throws error if no space in vd, or if the parent is not in the graph
-	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInGraphException, NotADirectoryException{
+	//throws error if no space in vd, or if the parent is not in the tree
+	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException{
 		if (this.getNodeFromPath(parentPath) instanceof Directory){
 			Directory parent = (Directory) this.getNodeFromPath(parentPath);
 			File currentFile = new File(path);
@@ -158,8 +158,8 @@ public class VirtualDisk implements Serializable {
 				f.importFile(path);
 				f.setSize(currentFile.length());
 				if (f.getSize()<availableSpace){
-					this.graph.addNode(f);
-					this.graph.addEdge(new Edge(parent, f));
+					this.tree.addNode(f);
+					this.tree.addEdge(new Edge(parent, f));
 				}
 				else{
 					throw new NoAvailableSpaceException("There is no space left on disk to add the file: " + f.getName());
@@ -168,8 +168,8 @@ public class VirtualDisk implements Serializable {
 			if (currentFile.isDirectory()){ // if it's a Directory we instantiate a Directory Object
 				Directory d = new Directory(currentFile.getName());
 				String filename = d.getName();
-				this.graph.addNode(d);
-				this.graph.addEdge(new Edge(parent,d));
+				this.tree.addNode(d);
+				this.tree.addEdge(new Edge(parent,d));
 				String[] sonsPaths = currentFile.list();
 				for (String sonPath : sonsPaths){
 					this.importFileStructure(path + "/" + sonPath, this.getPath(d));
@@ -192,7 +192,7 @@ public class VirtualDisk implements Serializable {
 //			System.out.println(f.getName());
 			f.exportFile(computerPath);
 		}
-		catch (NotInGraphException e) {
+		catch (NotInTreeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -201,7 +201,7 @@ public class VirtualDisk implements Serializable {
 
 	// exports Directory as specified by path (filename) to folder specified by computerPath
 	// NB : it also exports all what's contained in the specified directory
-	public void exportDirectory(String computerPath, String filename) throws NotInGraphException{
+	public void exportDirectory(String computerPath, String filename) throws NotInTreeException{
 		Node n = this.getNodeFromPath(filename);
 		//get node name (ie name of file/folder)
 		String tempFileName= n.getName();
@@ -211,7 +211,7 @@ public class VirtualDisk implements Serializable {
 		}
 		else if (n instanceof Directory){
 			new File(computerPath+"/"+tempFileName).mkdir();
-			List<Node> suc = this.getGraph().getSuccessors(n);
+			List<Node> suc = this.getTree().getSuccessors(n);
 			for ( Node node : suc){
 				exportDirectory(computerPath+"/"+tempFileName,this.getPath(node));
 			}
@@ -224,11 +224,11 @@ public class VirtualDisk implements Serializable {
 	// -----------------------------------------------------------------------------
 
 	//Internal moving of hierarchies
-	public void move(String nodeMovedPath, String parentPath) throws NotInGraphException, NotADirectoryException{
+	public void move(String nodeMovedPath, String parentPath) throws NotInTreeException, NotADirectoryException, ParentException{
 		Node n = this.getNodeFromPath(nodeMovedPath);
 		if (this.getNodeFromPath(parentPath) instanceof Directory){
 			Directory parent = (Directory) this.getNodeFromPath(parentPath);
-			this.getGraph().move(n, parent);
+			this.getTree().move(n, parent);
 		}
 		else
 			throw new NotADirectoryException();
@@ -236,19 +236,19 @@ public class VirtualDisk implements Serializable {
 	
 	// copying a file hierarchy from one folder to another inside the virtual disk
 	//raises exception if there is no available space to recreate extra files
-    public void copy(String nodeToBeCopied, String parent) throws NotInGraphException, NotADirectoryException, NoAvailableSpaceException{
-        Graph subGraph = this.getSubGraph(nodeToBeCopied);
-        Graph subGraphCopy = new Graph();
-        subGraphCopy.setNodeList(subGraph.getNodeList());
-        subGraphCopy.setEdgeList(subGraph.getEdgeList());
-        if (subGraphCopy.getTotalFileSize() < this.queryFreeSpace()){
-               for (Node n : subGraphCopy.getNodeList()){
-                      this.getGraph().addNode(n);
+    public void copy(String nodeToBeCopied, String parent) throws NotInTreeException, NotADirectoryException, NoAvailableSpaceException, ParentException{
+        Tree subTree = this.getSubTree(nodeToBeCopied);
+        Tree subTreeCopy = new Tree();
+        subTreeCopy.setNodeList(subTree.getNodeList());
+        subTreeCopy.setEdgeList(subTree.getEdgeList());
+        if (this.getTotalFileSize(subTreeCopy) < this.queryFreeSpace()){
+               for (Node n : subTreeCopy.getNodeList()){
+                      this.getTree().addNode(n);
                }
-               for(Edge e : subGraphCopy.getEdgeList()){
-                      this.getGraph().addEdge(e);
+               for(Edge e : subTreeCopy.getEdgeList()){
+                      this.getTree().addEdge(e);
                }
-               this.getGraph().addEdge(new Edge(this.getNodeFromPath(parent),this.getNodeFromPath(nodeToBeCopied)));
+               this.getTree().addEdge(new Edge(this.getNodeFromPath(parent),this.getNodeFromPath(nodeToBeCopied)));
         }
         else
                throw new NoAvailableSpaceException("there is not enough space in the disk");
@@ -259,10 +259,10 @@ public class VirtualDisk implements Serializable {
 	// -----------------------------------------------------------------------------
 
 	//returns file path of a node
-	public String getPath(Node n) throws NotInGraphException{
-		if (this.getGraph().contains(n)){
+	public String getPath(Node n) throws NotInTreeException{
+		if (this.getTree().contains(n)){
 			List<Node> nodes = new ArrayList<Node>();
-			nodes = this.getGraph().getListOfPredecessors(n);
+			nodes = this.getTree().getListOfPredecessors(n);
 			String str = new String();
 			for (int i = 0; i < nodes.size(); i++)
 			{
@@ -271,31 +271,31 @@ public class VirtualDisk implements Serializable {
 			return str + n.getName();
 		}
 		else
-			throw new NotInGraphException("node " + n + " isn't part of the graph");
+			throw new NotInTreeException("node " + n + " isn't part of the tree");
 	}
 
 
 	//gets the Node object (File or Folder) from path name	
-	public Node getNodeFromPath(String path) throws NotInGraphException{
+	public Node getNodeFromPath(String path) throws NotInTreeException{
 		String[] directories = path.split("/");
 		//gets Home node
-		Node Home = this.getGraph().getNodeList().get(0);
+		Node Home = this.getTree().getNodeList().get(0);
 		// Initialises current node with Home, the base of the file hierarchy
 		Node currentNode = Home;
 		for (int i=0; i< directories.length-1; i++){
 			//gets list of successors of the current node
-			List<Node> suc = this.getGraph().getSuccessors(currentNode);
+			List<Node> suc = this.getTree().getSuccessors(currentNode);
 			//goes through the successors to see if the next directory specified by path is included, throw error if not found
 			boolean hasChanged = false;
 			for (Node node : suc){
-				if (directories[i+1].equals(node.getName())&&(this.getGraph().containsEdge(currentNode, node))){
+				if (directories[i+1].equals(node.getName())&&(this.getTree().containsEdge(currentNode, node))){
 					currentNode=node;
 					hasChanged = true;
 					break;
 				}
 			}
 			if (!hasChanged){
-				throw new NotInGraphException();
+				throw new NotInTreeException();
 			}
 		}
 
@@ -303,13 +303,13 @@ public class VirtualDisk implements Serializable {
 	}
 
 	//---------------------------------------------------------------------------------
-	// SEARCH (INCLUDES SUBGRAPH AND GETALLSUCCESSORS)
+	// SEARCH (INCLUDES subTree AND GETALLSUCCESSORS)
 	//---------------------------------------------------------------------------------
 
 	//search function, returns list of files from string name (gives back a list because multiple files may have the same name)
-	public List<Node> search (String name) throws NotInGraphException{
+	public List<Node> search (String name) throws NotInTreeException{
 		List<Node> res = new ArrayList<Node>();
-		for (Node n : this.getGraph().getNodeList()){
+		for (Node n : this.getTree().getNodeList()){
 			if((n.getName().equals(name))&& (n instanceof Fichier)){
 				res.add((Fichier)n);
 			}
@@ -318,25 +318,25 @@ public class VirtualDisk implements Serializable {
 			}
 		}
 		if (res.isEmpty()){
-			throw new NotInGraphException();
+			throw new NotInTreeException();
 		}
 		return res;
 	}
 
 	//returns a list of all files and folders in a given directory
-	public List<Node> getAllSuccessors(String path) throws NotInGraphException{
+	public List<Node> getAllSuccessors(String path) throws NotInTreeException{
 		Node node = this.getNodeFromPath(path);
 		Successors succ = new Successors();
 		succ.aux(node);
 		return succ.nodes;
 	}
 
-	//returns the sub graph of a graph starting from the node specified by path
-	public Graph getSubGraph(String path) throws NotInGraphException{
+	//returns the sub tree of a tree starting from the node specified by path
+	public Tree getSubTree(String path) throws NotInTreeException{
 		Node node = this.getNodeFromPath(path);
 		Successors succ = new Successors();
 		succ.aux2(node);
-		Graph g = new Graph();
+		Tree g = new Tree();
 		g.setNodeList(succ.nodes);
 		g.setEdgeList(succ.edges);
 		return g;
@@ -347,13 +347,13 @@ public class VirtualDisk implements Serializable {
 		List<Node> nodes = new ArrayList<Node>();
 		List<Edge> edges = new ArrayList<Edge>();
 		
-		public void aux(Node node) throws NotInGraphException{
+		public void aux(Node node) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			if(node instanceof Fichier){
 				this.nodes.add(node);
 			}
 			else{
-				List<Node> succ = VirtualDisk.this.getGraph().getSuccessors(node);
+				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
 				this.nodes.add(node);
 				for (Node n: succ){
 					aux(n);
@@ -361,16 +361,16 @@ public class VirtualDisk implements Serializable {
 			}      
 		}      
 		
-		public void aux2(Node node) throws NotInGraphException{
+		public void aux2(Node node) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			if(node instanceof Fichier){
 				this.nodes.add(node);
 			}
 			else{
-				List<Node> succ = VirtualDisk.this.getGraph().getSuccessors(node);
+				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
 				this.nodes.add(node);
 				for (Node n: succ){
-					this.edges.add(VirtualDisk.this.getGraph().getEdgeFromNodes(node, n));
+					this.edges.add(VirtualDisk.this.getTree().getEdgeFromNodes(node, n));
 					aux2(n);
 				}
 			}      
@@ -378,7 +378,7 @@ public class VirtualDisk implements Serializable {
 	}
 
 	//for searching in specific directory 
-	public List<Node> search (String name, String parent) throws NotInGraphException{
+	public List<Node> search (String name, String parent) throws NotInTreeException{
 		List<Node> hierarchy = this.getAllSuccessors(parent);
 		List<Node> res = new ArrayList<Node>();
 		for (Node n : hierarchy){
@@ -390,31 +390,12 @@ public class VirtualDisk implements Serializable {
 			}
 		}
 		if (res.isEmpty()){
-			throw new NotInGraphException();
+			throw new NotInTreeException();
 		}
 		return res;
 	}
 
-	//---------------------------------------------------------------------------------
-	// GETTERS AND SETTERS AND EQUALS METHOD
-	//---------------------------------------------------------------------------------
 
-	// query free space left in virtual disk
-		public long queryFreeSpace(){
-			long totalSize = this.getTotalFileSize();
-			return (this.capacity - totalSize);
-		}
-		
-		public long getTotalFileSize() {
-			long totalSize = 0;
-			for (Node n : this.getGraph().getNodeList()){
-				if (n instanceof Fichier){
-					Fichier f = (Fichier) n;
-					totalSize = totalSize + f.getSize();
-				}
-			}
-			return totalSize;
-		}
 
 	//---------------------------------------------------------------------------------
 	// GETTERS AND SETTERS AND EQUALS METHOD
@@ -425,7 +406,7 @@ public class VirtualDisk implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + capacity;
-		result = prime * result + ((graph == null) ? 0 : graph.hashCode());
+		result = prime * result + ((tree == null) ? 0 : tree.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		return result;
@@ -442,10 +423,10 @@ public class VirtualDisk implements Serializable {
 		VirtualDisk other = (VirtualDisk) obj;
 		if (capacity != other.capacity)
 			return false;
-		if (graph == null) {
-			if (other.graph != null)
+		if (tree == null) {
+			if (other.tree != null)
 				return false;
-		} else if (!graph.equals(other.graph))
+		} else if (!tree.equals(other.tree))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -476,13 +457,56 @@ public class VirtualDisk implements Serializable {
 		return path;
 	}
 
-	public graphImplementation.Graph getGraph() {
-		return graph;
+	public Tree getTree() {
+		return tree;
 	}
 
-	public void setGraph(graphImplementation.Graph graph) {
-		this.graph = graph;
+	public void setTree(Tree tree) {
+		this.tree = tree;
 	}
 
+	
+	//-------------------------------------------------------------------------------------------
+	// VISITING
+	//-------------------------------------------------------------------------------------------
+	
+	@Override
+	public long visit(Fichier f) {
+		return f.getSize();
+	}
+
+	@Override
+	public long visit(Directory d) {
+		return 0;
+	}
+
+//	// query free space left in virtual disk
+//	public long queryFreeSpace(){
+//		long totalSize = this.tree.getTotalFileSize();
+//		return (this.capacity - totalSize);
+//	}
+
+	//return the total file size of all files contained in tree
+		public long getTotalFileSize(Tree t) {
+			long totalSize = 0;
+			for (Node n : t.getNodeList()){
+				if (n instanceof Fichier){
+					Fichier f = (Fichier) n;
+					totalSize = totalSize + f.getSize();
+				}
+			}
+			return totalSize;
+		}
+	
+	public long queryFreeSpace(){
+		long occupiedSpace = 0;
+		for (Node n : this.getTree().getNodeList()){
+			if (n instanceof Fichier)
+				occupiedSpace += ((Fichier)n).accept(this);
+			if (n instanceof Directory)
+				occupiedSpace += ((Directory)n).accept(this);
+		}
+		return (this.capacity - occupiedSpace);
+	}
 
 }
