@@ -9,7 +9,7 @@ public class GUI extends JFrame{
 
 	public static void main(String[] args) throws NotInTreeException {
 		// TODO Auto-generated method stub
-	Frame2 frame = new Frame2();
+	Frame frame = new Frame();
 	
 	
 

@@ -13,6 +13,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -43,11 +44,22 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	
 	
-	private JButton button = new JButton("Rename");
+	
 	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
-	private JPanel panRight = new JPanel();
+	private JPanel panUpRight = new JPanel();
+	private JPanel panDownRight = new JPanel();
 	JScrollPane htmlView = new JScrollPane(htmlPane);
+	
+	
+	private JButton buttonRename = new JButton("Rename");
+	private JButton buttonCopy = new JButton("Copy");
+	private JButton buttonPaste = new JButton("Paste");
+	private JButton buttonRemove = new JButton("Remove");
+	private JButton buttonParent = new JButton("Parent");
+	
+	
+	
 	
 	public Frame() throws NotInTreeException{
 		tree = TreeUtil.buildTreeFromVd(vd);
@@ -60,20 +72,25 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.setLayout(new GridLayout(1,0));
+		this.setLayout(new GridLayout(0,2));
 	
 		htmlPane.setEditable(false);
 		
 		this.getContentPane().add(panLeft);
-		this.getContentPane().add(panRight);
+		this.getContentPane().add(panUpRight);
 		panLeft.add(textField);
-		panLeft.add(button);
+		panLeft.add(buttonRename);
+		panLeft.add(buttonCopy);
+		panLeft.add(buttonPaste);
+		panLeft.add(buttonRemove);
+		panLeft.add(buttonParent);
 		panLeft.add(htmlPane);
-		panRight.add(tree);
+		panUpRight.add(tree);
+		panDownRight.add(new JLabel("salut"));
 		
 		tree.addTreeSelectionListener(this);
 		textField.addKeyListener(this);
-		button.addMouseListener(this);
+		buttonRename.addMouseListener(this);
 		
 		this.setVisible(true);
 		
@@ -116,7 +133,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	public void mousePressed(MouseEvent arg0) {
 		if (treepath != null){
 			if ((!textField.getText().equals("")) || (textField.getText()==null)){
-				panRight.remove(tree);
+				panUpRight.remove(tree);
 				String oldPath = TreeUtil.treePathToString(treepath);	
 				String newPath = textField.getText();
 				CLUI.mv("vdlevel1", oldPath, newPath);
@@ -126,7 +143,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				panRight.add(tree);
+				panUpRight.add(tree);
 				tree.addTreeSelectionListener(this);
 				this.revalidate();
 				this.repaint();
