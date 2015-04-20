@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -19,13 +21,14 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import treeImplementation.Node;
 import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
 
-public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener{
+public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener, KeyListener{
 	
 //	CLUI.crvfs("vfsGUItest",1000);
 	
@@ -34,10 +37,10 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	
 	
-	JTree tree = TreeUtil.buildTreeFromVd(vd);
-	TreePath treepath;
+	JTree tree;
+	TreePath treepath=null;
 	JTextField textField = new JTextField(20);
-	String renameText;
+	
 	
 	
 	private JButton button = new JButton("Rename");
@@ -47,7 +50,10 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	JScrollPane htmlView = new JScrollPane(htmlPane);
 	
 	public Frame() throws NotInTreeException{
+		tree = TreeUtil.buildTreeFromVd(vd);
 		VdcnManagement.getVdList().add(vdcn);
+		
+		
 		JFrame frame = new JFrame();
 		this.setTitle("VFS");
 		this.setSize(600, 400);
@@ -66,7 +72,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panRight.add(tree);
 		
 		tree.addTreeSelectionListener(this);
-		textField.addActionListener(this);
+		textField.addKeyListener(this);
 		button.addMouseListener(this);
 		
 		this.setVisible(true);
@@ -79,23 +85,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		if (node == null) {return;}
 		
-		Object nodeInfo = node.getUserObject();
-		if (node.isLeaf()){
-			htmlPane.setText("file");
-		}
-		else{
-			htmlPane.setText("folder");
-		}
-		
 		treepath = e.getPath();
 		htmlPane.setText( TreeUtil.treePathToString(treepath));
 }
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		renameText = textField.getText();
-		htmlPane.setText(renameText);
 		
 	}
 
@@ -119,29 +114,52 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		
-		String oldPath = TreeUtil.treePathToString(treepath);	
-		String newPath = textField.getText();
-		htmlPane.setText(renameText);
-		CLUI.mv("vdlevel1", oldPath, newPath);
-		try {
-			tree = TreeUtil.buildTreeFromVd(vd);
-		} catch (NotInTreeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (treepath != null){
+			if ((!textField.getText().equals("")) || (textField.getText()==null)){
+				panRight.remove(tree);
+				String oldPath = TreeUtil.treePathToString(treepath);	
+				String newPath = textField.getText();
+				CLUI.mv("vdlevel1", oldPath, newPath);
+				try {
+					this.tree = TreeUtil.buildTreeFromVd(this.vd);
+				} catch (NotInTreeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				panRight.add(tree);
+				tree.addTreeSelectionListener(this);
+				this.revalidate();
+				this.repaint();
+			}
+			else {System.out.println("Please enter a new name for the file/directory");}
 		}
-		
-		try {
-			Frame frame = new Frame();
-		} catch (NotInTreeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		else{
+			System.out.println("No file/directory selected");
 		}
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
