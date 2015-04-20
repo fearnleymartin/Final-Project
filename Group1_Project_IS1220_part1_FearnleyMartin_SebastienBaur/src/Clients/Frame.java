@@ -95,6 +95,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		renameText = textField.getText();
+		htmlPane.setText(renameText);
 		
 	}
 
@@ -130,11 +131,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			e.printStackTrace();
 		}
 		
-		this.setVisible(true);
-		this.revalidate();
-		this.repaint();
-		tree.updateUI();
-		System.out.println(vd.getGraph().getNodeList());
+		try {
+			Frame frame = new Frame();
+		} catch (NotInTreeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
