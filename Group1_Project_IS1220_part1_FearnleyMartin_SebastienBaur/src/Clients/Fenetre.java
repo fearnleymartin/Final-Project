@@ -1,6 +1,7 @@
 package Clients;
 
 import java.awt.Color; 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.Box;
@@ -9,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 
@@ -28,13 +30,13 @@ VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
 private JTree tree;
 private TreePath treepath;
-private JTextField renameTextField = new JTextField(20);
+private JTextField renameTextField = new JTextField(15);
 //private JTextField removeFileTextField = new JTextField(20);
 //private JTextField removeVFSTextField = new JTextField(20);
-private JTextField createVFSTextField = new JTextField(20); // maybe add two others ones for size and location and name
-private JTextField importFileStructureTextField = new JTextField(20); // maybe open a window of navigation AND maybe others text boxes
-private JTextField exportVFSTextField = new JTextField(20);
-private JTextField findTextField = new JTextField(20);
+private JTextField createVFSTextField = new JTextField(15); // maybe add two others ones for size and location and name
+private JTextField importFileStructureTextField = new JTextField(15); // maybe open a window of navigation AND maybe others text boxes
+private JTextField exportVFSTextField = new JTextField(15);
+private JTextField findTextField = new JTextField(15);
 
 private JTextField commandLinePrinting = new JTextField(40);
 private JTextField commandLineWriting = new JTextField(40);
@@ -53,15 +55,22 @@ private JButton buttonHelp = new JButton("Help");
 // ne pas oublier le label qui affiche le free space
 protected JEditorPane htmlPane = new JEditorPane();
 private JPanel panLeft = new JPanel();
+private JTabbedPane tabbedPanUpRight = new JTabbedPane();
 private JPanel panUpRight = new JPanel();
 private JPanel panDownRight = new JPanel();
 JScrollPane htmlView = new JScrollPane(htmlPane);
 
 
+
+
+
+
+
 public Fenetre() throws NotInTreeException{
+	this.setResizable(false);
 	JTree tree = TreeUtil.buildTreeFromVd(vd);
 	this.setTitle("Ma première fenêtre Java");
-	this.setSize(800, 400);
+	this.setSize(1000, 500);
 	this.setLocationRelativeTo(null);               
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -82,6 +91,22 @@ public Fenetre() throws NotInTreeException{
 
 	panLeft.setLayout(new GridLayout(10,2));
 	
+	buttonRename.setPreferredSize(new Dimension(20,2));
+	buttonCreateVFS.setPreferredSize(new Dimension(20,2));
+	buttonImport.setPreferredSize(new Dimension(20,2));
+	buttonExport.setPreferredSize(new Dimension(20,2));
+	buttonFind.setPreferredSize(new Dimension(20,2));
+	buttonCopy.setPreferredSize(new Dimension(20,2));
+	buttonPaste.setPreferredSize(new Dimension(20,2));
+	buttonRemoveFile.setPreferredSize(new Dimension(20,2));
+	buttonRemoveVFS.setPreferredSize(new Dimension(20,2));
+	buttonHelp.setPreferredSize(new Dimension(20,2));
+	renameTextField.setPreferredSize(new Dimension(20,2));
+	createVFSTextField.setPreferredSize(new Dimension(20,2));
+	importFileStructureTextField.setPreferredSize(new Dimension(20,2));
+	exportVFSTextField.setPreferredSize(new Dimension(20,2));
+	findTextField.setPreferredSize(new Dimension(20,100));
+
 	panLeft.add(buttonRename);
 	panLeft.add(renameTextField);
 	panLeft.add(buttonCreateVFS);
