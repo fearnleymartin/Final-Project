@@ -133,7 +133,7 @@ public class TreeTest {
                     e.printStackTrace();
              }
              Directory d = new Directory("d4");
-             assertEquals(d,t1.getPredecessor(f6));
+             assertEquals(d,t1.getPredecessor(f6).get(0));
        }
 
        
