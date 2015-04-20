@@ -148,7 +148,7 @@ public class VirtualDisk implements Serializable, Visitor {
 
 	//for importing a new file structure into the existing structure form the computer(a file or a directory and all its sons)
 	//throws error if no space in vd, or if the parent is not in the tree
-	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException{
+	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException {
 		if (this.getNodeFromPath(parentPath) instanceof Directory){
 			Directory parent = (Directory) this.getNodeFromPath(parentPath);
 			File currentFile = new File(path);

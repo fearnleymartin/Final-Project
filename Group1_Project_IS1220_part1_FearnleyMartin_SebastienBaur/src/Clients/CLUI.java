@@ -191,12 +191,12 @@ public class CLUI {
 	}
 
 	//import file structure into vd
-	public static void impvfs(String hostpath,String vfsname, String vfspath) throws ParentException {
+	public static void impvfs(String hostpath,String vfsname, String vfspath){
 		VdAndCurrentNode vdcn = null;
 		try {
 			vdcn = getVdACNFromVfsname(vfsname);
 			VirtualDisk vd = vdcn.getVd();
-			try {
+			try { 
 				vd.importFileStructure(hostpath, vfspath);
 			} catch (NoAvailableSpaceException e) {
 				e.printStackTrace();
@@ -205,6 +205,9 @@ public class CLUI {
 				e.printStackTrace();
 			} catch (NotADirectoryException e) {
 				System.out.println(vfspath + " is not a directory");
+				e.printStackTrace();
+			} catch (ParentException e) {
+				System.out.println("parent exception: file system you are importing is corrupted");
 				e.printStackTrace();
 			}
 			System.out.println(hostpath + " imported into "+ vfsname);
@@ -607,7 +610,7 @@ public class CLUI {
 //		//display trees
 //		GenerateTree gt = new GenerateTree(vfs1.getVd());
 //		new GenerateTree(vfs2.getVd());
-		
+		expvfs("vfs1","eval/Host/moving test");
 		System.out.println("What would you like to do ? Type help to see the commands");
 		
 		
