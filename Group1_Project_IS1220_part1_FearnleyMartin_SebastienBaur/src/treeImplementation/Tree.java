@@ -104,6 +104,8 @@ public class Tree implements Serializable{
 
 	}
 
+
+	
 	//	// this method is used by the VirtualDisk method deleteAll(String path)
 	//	public void deleteAllAux(Node n) throws NotInTreeException{
 	//		if(this.getNodeList().contains(n)){

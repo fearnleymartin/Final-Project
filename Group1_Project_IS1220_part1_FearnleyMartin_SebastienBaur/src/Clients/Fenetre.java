@@ -3,6 +3,7 @@ package Clients;
 import java.awt.Color; 
 import java.awt.GridLayout;
 
+import javax.swing.Box;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +36,8 @@ private JTextField importFileStructureTextField = new JTextField(20); // maybe o
 private JTextField exportVFSTextField = new JTextField(20);
 private JTextField findTextField = new JTextField(20);
 
+private JTextField commandLinePrinting = new JTextField(20);
+private JTextField commandLineWriting = new JTextField(20);
 
 private JButton buttonRename = new JButton("Rename");
 private JButton buttonCopy = new JButton("Copy");
@@ -89,7 +92,6 @@ public Fenetre() throws NotInTreeException{
 	panLeft.add(exportVFSTextField);
 	panLeft.add(buttonFind);
 	panLeft.add(findTextField);
-
 	panLeft.add(buttonCopy);
 	panLeft.add(buttonPaste);
 	panLeft.add(buttonRemoveFile);
@@ -97,7 +99,18 @@ public Fenetre() throws NotInTreeException{
 	panLeft.add(buttonHelp);
 	
 	panUpRight.add(tree);
-	panDownRight.add(new JLabel("salut"));
+	
+    Box b = Box.createVerticalBox();
+    Box lineWriting = Box.createHorizontalBox();
+    lineWriting.add(new JLabel("Write here : "));
+    lineWriting.add(commandLineWriting);
+    b.add(lineWriting);
+    Box lineReading = Box.createHorizontalBox();
+    lineReading.add(new JLabel("Read here : "));
+    lineReading.add(commandLinePrinting);
+    b.add(lineReading);
+	panDownRight.add(b);
+
 	
 	this.setVisible(true);
 
