@@ -58,7 +58,7 @@ private JPanel panLeft = new JPanel();
 private JTabbedPane tabbedPanUpRight = new JTabbedPane();
 private JPanel panUpRight = new JPanel();
 private JPanel panDownRight = new JPanel();
-JScrollPane htmlView = new JScrollPane(htmlPane);
+//JScrollPane htmlView = new JScrollPane(htmlPane);
 
 
 
@@ -86,27 +86,10 @@ public Fenetre() throws NotInTreeException{
 
 	// ajout des panneaux aux bonnes positions
 	this.getContentPane().add(panLeft, BorderLayout.WEST);
-	this.getContentPane().add(panUpRight, BorderLayout.CENTER);
+	this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
 	this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
-	panLeft.setLayout(new GridLayout(10,2));
-	
-	buttonRename.setPreferredSize(new Dimension(20,2));
-	buttonCreateVFS.setPreferredSize(new Dimension(20,2));
-	buttonImport.setPreferredSize(new Dimension(20,2));
-	buttonExport.setPreferredSize(new Dimension(20,2));
-	buttonFind.setPreferredSize(new Dimension(20,2));
-	buttonCopy.setPreferredSize(new Dimension(20,2));
-	buttonPaste.setPreferredSize(new Dimension(20,2));
-	buttonRemoveFile.setPreferredSize(new Dimension(20,2));
-	buttonRemoveVFS.setPreferredSize(new Dimension(20,2));
-	buttonHelp.setPreferredSize(new Dimension(20,2));
-	renameTextField.setPreferredSize(new Dimension(20,2));
-	createVFSTextField.setPreferredSize(new Dimension(20,2));
-	importFileStructureTextField.setPreferredSize(new Dimension(20,2));
-	exportVFSTextField.setPreferredSize(new Dimension(20,2));
-	findTextField.setPreferredSize(new Dimension(20,100));
-
+	panLeft.setLayout(new GridLayout(10,2));	
 	panLeft.add(buttonRename);
 	panLeft.add(renameTextField);
 	panLeft.add(buttonCreateVFS);
@@ -128,6 +111,7 @@ public Fenetre() throws NotInTreeException{
 	panLeft.add(buttonHelp);
 	
 	panUpRight.add(tree);
+	tabbedPanUpRight.addTab("vfs1",panUpRight);
 	
     Box b = Box.createVerticalBox();
     Box lineWriting = Box.createHorizontalBox();
