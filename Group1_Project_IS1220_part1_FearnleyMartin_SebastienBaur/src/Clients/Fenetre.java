@@ -36,8 +36,8 @@ private JTextField importFileStructureTextField = new JTextField(20); // maybe o
 private JTextField exportVFSTextField = new JTextField(20);
 private JTextField findTextField = new JTextField(20);
 
-private JTextField commandLinePrinting = new JTextField(20);
-private JTextField commandLineWriting = new JTextField(20);
+private JTextField commandLinePrinting = new JTextField(40);
+private JTextField commandLineWriting = new JTextField(40);
 
 private JButton buttonRename = new JButton("Rename");
 private JButton buttonCopy = new JButton("Copy");
@@ -61,7 +61,7 @@ JScrollPane htmlView = new JScrollPane(htmlPane);
 public Fenetre() throws NotInTreeException{
 	JTree tree = TreeUtil.buildTreeFromVd(vd);
 	this.setTitle("Ma première fenêtre Java");
-	this.setSize(400, 100);
+	this.setSize(800, 400);
 	this.setLocationRelativeTo(null);               
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -80,7 +80,7 @@ public Fenetre() throws NotInTreeException{
 	this.getContentPane().add(panUpRight, BorderLayout.CENTER);
 	this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
-	panLeft.setLayout(new GridLayout(8,2));
+	panLeft.setLayout(new GridLayout(10,2));
 	
 	panLeft.add(buttonRename);
 	panLeft.add(renameTextField);
@@ -93,9 +93,13 @@ public Fenetre() throws NotInTreeException{
 	panLeft.add(buttonFind);
 	panLeft.add(findTextField);
 	panLeft.add(buttonCopy);
+	panLeft.add(new JPanel());
 	panLeft.add(buttonPaste);
+	panLeft.add(new JPanel());
 	panLeft.add(buttonRemoveFile);
+	panLeft.add(new JPanel());
 	panLeft.add(buttonRemoveVFS);
+	panLeft.add(new JPanel());
 	panLeft.add(buttonHelp);
 	
 	panUpRight.add(tree);
