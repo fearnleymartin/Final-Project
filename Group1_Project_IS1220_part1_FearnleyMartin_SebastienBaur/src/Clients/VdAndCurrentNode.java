@@ -9,9 +9,14 @@ import dataTypes.VirtualDisk;
 		private Node currentNode;
 		private VirtualDisk vd;
 		
-		public VdAndCurrentNode(VirtualDisk vd) throws NotInGraphException {
+		public VdAndCurrentNode(VirtualDisk vd) {
 			super();
-			this.currentNode = vd.getNodeFromPath("Home");
+			try {
+				this.currentNode = vd.getNodeFromPath("Home");
+			} catch (NotInGraphException e) {
+				System.out.print("This vd contains no Home node");
+				e.printStackTrace();
+			}
 			this.vd = vd;
 		}
 		public Node getCurrentNode() {

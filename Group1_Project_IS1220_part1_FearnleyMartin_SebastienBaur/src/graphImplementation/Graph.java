@@ -165,7 +165,7 @@ public class Graph implements Serializable{
 			if (e.getEndNode().equals(n))
 				return (e.getStartNode());
 		}
-		throw new NotInGraphException("the node" + n + "isn't part of the graph");
+		throw new NotInGraphException("the node " + n + " isn't part of the graph");
 	}
 
 	//return list of predecessors of a node
