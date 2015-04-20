@@ -457,30 +457,48 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					subTreeCopy.setNodeList(subTree.getNodeList());
 			        subTreeCopy.setEdgeList(subTree.getEdgeList());
 			        if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
-			               for (Node n : subTreeCopy.getNodeList()){
+			        	System.out.println(tempNode.toString());
+			        	System.out.println(parent.toString());
+			        	panUpRight.remove(tree);    
+			        	for (Node n : subTreeCopy.getNodeList()){
 			                      vd.getTree().addNode(n);
-			               }
-			               for(Edge e : subTreeCopy.getEdgeList()){
-			                      try {
-									vd.getTree().addEdge(e);
-								} catch (ParentException e1) {
-									
-									e1.printStackTrace();
-								} catch (NotInTreeException e1) {
-									
-									e1.printStackTrace();
-								}
-			               }
-			                
-			               try {
-							vd.getTree().addEdge(new Edge(vd.getNodeFromPath(parent),tempNode));
-						} catch (ParentException e1) {
+			                      
+			            }
+		               for(Edge e : subTreeCopy.getEdgeList()){
+		                      try {
+								vd.getTree().addEdge(e);
+							} catch (ParentException e1) {
+								
+								e1.printStackTrace();
+							} catch (NotInTreeException e1) {
+								
+								e1.printStackTrace();
+							}
+		               }
+			                 
+		               try {
+						vd.getTree().addEdge(new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot()));
+		               } catch (ParentException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+		               } catch (NotInTreeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+		               }
+		               
+		               
+		               try {
+		            	   System.out.println("ok");
+							tree = TreeUtil.buildTreeFromVd(vd);
+		               } catch (NotInTreeException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						} catch (NotInTreeException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+		               }
+		               CLUI.ls("vdlevel1", "", "");
+						panUpRight.add(tree);
+						tree.addTreeSelectionListener(new SelectionListener());
+						revalidate();
+						repaint();   
 			        }
 			        else {commandLinePrinting.setText("Not enough available space in virtual disk");}
 				}

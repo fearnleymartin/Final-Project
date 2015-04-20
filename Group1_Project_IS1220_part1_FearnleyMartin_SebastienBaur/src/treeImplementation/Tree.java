@@ -112,7 +112,7 @@ public class Tree implements Serializable{
 		if (test){
 			if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
 				{this.edgeList.add(e);
-				System.out.println("Entered if");
+//				System.out.println("Entered if");
 				}
 			
 			else{
@@ -231,6 +231,19 @@ public class Tree implements Serializable{
 		return res;
 	}
 
+	public Node getRoot() throws NotInTreeException{
+		if (!this.getNodeList().isEmpty()){
+			Node n = this.getNodeList().get(0);
+			if (this.nodeList.size()==1){
+				return n;
+			}
+			else{
+				List<Node> prec = getListOfPredecessors(n);
+				return prec.get(prec.size()-1);
+			}
+		}
+		else throw new NotInTreeException("empty graph");
+	}
 
 
 	public List<Node> getAllSuccessorsAux(Node n, List<Node> successors){
