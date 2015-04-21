@@ -48,7 +48,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	//	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
 	//	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
-	
+
 	VirtualDisk vd;
 	JTree tree;
 	TreePath treepath=null;
@@ -56,7 +56,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	Node tempNode=null;
 	int index;
 	JPanel pane;
-	
+
 	public VirtualDisk getVd() {
 		return vd;
 	}
@@ -77,7 +77,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JEditorPane commandLineWriting = new JEditorPane();
 	//	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
-//	private JPanel panUpRight = new JPanel();
+	//	private JPanel panUpRight = new JPanel();
 	private JPanel panDownRight = new JPanel();
 	private JTabbedPane tabbedPanUpRight = new JTabbedPane();
 	JTextArea htmlView = new JTextArea();
@@ -126,7 +126,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
 		this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
-		panLeft.setLayout(new GridLayout(11,2));
+		panLeft.setLayout(new GridLayout(12,2));
 
 		panLeft.add(buttonRename);
 		panLeft.add(renameTextField);
@@ -152,7 +152,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(new JPanel());
 		panLeft.add(buttonHelp);
 		panLeft.add(helpTextField);
-		
+
 
 		//		panUpRight.add(tree);
 		//		tabbedPanUpRight.addTab("vfs1",panUpRight);
@@ -275,19 +275,19 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			try {
 				list = vd.search(filename);
 				for (Node n : list){
-					
+
 					try {
 						res = res + vd.getPath(n) + "\n" ;
 					} catch (NotInTreeException e1) {
 						htmlView.setText("Cannot get the path of " +n.getName());
-//						e1.printStackTrace();
+						//						e1.printStackTrace();
 					}
 				}
 				System.out.println(res);
 				htmlView.setText(res);
 			} catch (NotInTreeException e1) {
 				htmlView.setText(filename + " cannot be found in "+vd.getName());
-//				e1.printStackTrace();
+				//				e1.printStackTrace();
 			} 
 		}
 
@@ -480,8 +480,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-//				JPanel pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
-				
+				//				JPanel pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
+
 				pane.removeAll();
 				String parent = TreeUtil.treePathToString(treepath);	
 				String hostpath = importFileStructureTextField.getText();
@@ -494,11 +494,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-				
-				
+
+
+
 				pane.add(tree);
-				
+
 				tree.addTreeSelectionListener(new SelectionListener());
 				revalidate();	
 				repaint();
@@ -731,9 +731,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			String nameVFS = tabbedPanUpRight.getTitleAt(index);
 			try {
 				vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
-				
+
 				tree = TreeUtil.buildTreeFromVd(vd);
-				
+
 			} catch (VirtualDiskDoesntExistException e1) {
 				e1.printStackTrace();
 			} catch (NotInTreeException e2) {
@@ -1051,13 +1051,28 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		}
 
 	}
-	
+
 	public class LoadButtonListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+			String enteredPath = loadTextField.getText();
+			vd = VirtualDisk.loadVirtualDisk(enteredPath);
+			VdAndCurrentNode vdcn = new VdAndCurrentNode(vd); // the virtual disk vd should also be added to the list of virtual disks already opened
+			VdcnManagement.vdList.add(vdcn);
+			JPanel vdContent = new JPanel(); // creation of a pane that will contain the loaded virtual disk vd
+			try{
+				tabbedPanUpRight.addTab(vd.getName(), vdContent); // add a tab containing the JTree representing vd
+				index = tabbedPanUpRight.indexOfTab(vdContent.getName()); // updating of index
+				pane = (JPanel) tabbedPanUpRight.getComponentAt(index); // updating of pane
+				tabbedPanUpRight.setSelectedIndex(index); // selection of the tab that has just been added
+				tree = TreeUtil.buildTreeFromVd(vd); // creation of the tree from vd, which has just been loaded
+				vdContent.add(tree); // adding of the newly created tree to vdContent, which is contained in the new tab of tabbedPanUpRight
+				tree.addTreeSelectionListener(new SelectionListener()); // adding of a mouse listener, such as clicking on the tree causes an action of the program
+			}
+			catch(NotInTreeException e1){
+				e1.printStackTrace();
+				}
 		}
 
 		@Override
