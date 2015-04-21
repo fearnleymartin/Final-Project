@@ -5,6 +5,7 @@ import java.util.*;
 import treeImplementation.*;
 import dataTypes.NoAvailableSpaceException;
 import dataTypes.NotADirectoryException;
+import dataTypes.NotAnExistingFileException;
 import dataTypes.VirtualDisk;
 
 
@@ -17,8 +18,9 @@ public class Eval_2 {
 	 * @throws NotADirectoryException 
 	 * @throws ParentException 
 	 * @throws ImpossibleDeplacementException 
+	 * @throws NotAnExistingFileException 
 	 */
-	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException, ImpossibleDeplacementException {
+	public static void main(String[] args) throws NotInTreeException, NoAvailableSpaceException, NotADirectoryException, ParentException, ImpossibleDeplacementException, NotAnExistingFileException {
 
 		//--------------------------------------------------------------------------------
 		// CREATION OF A VIRTUAL DISK VD1, DISPLAY FREE SPACE AND INITIAL NODES

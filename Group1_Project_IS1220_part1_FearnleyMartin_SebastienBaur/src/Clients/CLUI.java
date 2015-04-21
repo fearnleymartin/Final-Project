@@ -197,7 +197,12 @@ public class CLUI {
 			vdcn = getVdACNFromVfsname(vfsname);
 			VirtualDisk vd = vdcn.getVd();
 			try { 
-				vd.importFileStructure(hostpath, vfspath);
+				try {
+					vd.importFileStructure(hostpath, vfspath);
+				} catch (NotAnExistingFileException e) {
+//					e.printStackTrace();
+					System.out.println("please enter a valid hostpath");
+				}
 				System.out.println(hostpath + " imported into "+ vfsname);
 			} catch (NoAvailableSpaceException e) {
 				e.printStackTrace();

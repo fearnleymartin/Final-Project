@@ -20,6 +20,7 @@ import dataTypes.Fichier;
 import dataTypes.InvalidVirtualDiskException;
 import dataTypes.NoAvailableSpaceException;
 import dataTypes.NotADirectoryException;
+import dataTypes.NotAnExistingFileException;
 import dataTypes.VirtualDisk;
 
 public class VirtualDiskTest {
@@ -44,7 +45,7 @@ public class VirtualDiskTest {
 	}
 	//test à revoir
 	@Test
-	public void testLoadVirtualDisk() throws NotInTreeException, NotADirectoryException, ParentException {
+	public void testLoadVirtualDisk() throws NotInTreeException, NotADirectoryException, ParentException, NotAnExistingFileException {
 		
 //		Recreation of eval/vd1.ser
 		VirtualDisk vd = new VirtualDisk(vdtest.getName(), vdtest.getPath(),vdtest.getCapacity());
@@ -121,7 +122,7 @@ public class VirtualDiskTest {
 	}
 
 	@Test
-    public void testimportFileStructure() throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException {
+    public void testimportFileStructure() throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException, NotAnExistingFileException {
           VirtualDisk vd1 = vdtest;
           VirtualDisk vd2 = new VirtualDisk(vdtest.getName(), vdtest.getPath(),vdtest.getCapacity());
           vd2.getTree().addNode(new Directory("Home"));

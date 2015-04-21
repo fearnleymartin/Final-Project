@@ -36,20 +36,20 @@ public class VirtualDisk implements Serializable, Visitor {
 	// -----------------------------------------------------------------------------
 	// LOADING AND SAVING VIRTUAL DISKS
 	// -----------------------------------------------------------------------------
-	
+
 	// saving using serialization
 	public void saveVirtualDisk(){
-			try{
-				FileOutputStream fos = new FileOutputStream(this.path);
-				ObjectOutputStream out = new ObjectOutputStream(fos);
-				out.writeObject(this);
-				out.close();
-				fos.close();
-				System.out.println("Your virtual disk is saved in " + this.path);
+		try{
+			FileOutputStream fos = new FileOutputStream(this.path);
+			ObjectOutputStream out = new ObjectOutputStream(fos);
+			out.writeObject(this);
+			out.close();
+			fos.close();
+			System.out.println("Your virtual disk is saved in " + this.path);
 
-			}catch(IOException i){
-				i.printStackTrace();
-			}
+		}catch(IOException i){
+			i.printStackTrace();
+		}
 	}
 
 	// loading using deserialization
@@ -97,22 +97,22 @@ public class VirtualDisk implements Serializable, Visitor {
 
 	//adds a node to the tree from a Fichier object
 	public void addFile(String parentLocation, Fichier fichier) throws NotADirectoryException, NoAvailableSpaceException, ParentException{
-        try{
-               if (this.getNodeFromPath(parentLocation) instanceof Directory){
-                      if( fichier.getSize() < this.queryFreeSpace()){
-                             Directory parent = (Directory) this.getNodeFromPath(parentLocation);
-                             this.tree.addNode(fichier);
-                             this.tree.addEdge(new Edge(parent,fichier));
-                      }
-                      else
-                             throw new NoAvailableSpaceException("there is not enough space in the disk");
-               }
-               else
-                      throw new NotADirectoryException();
-        } catch (NotInTreeException e) {
-               e.printStackTrace();
-        } 
-  }
+		try{
+			if (this.getNodeFromPath(parentLocation) instanceof Directory){
+				if( fichier.getSize() < this.queryFreeSpace()){
+					Directory parent = (Directory) this.getNodeFromPath(parentLocation);
+					this.tree.addNode(fichier);
+					this.tree.addEdge(new Edge(parent,fichier));
+				}
+				else
+					throw new NoAvailableSpaceException("there is not enough space in the disk");
+			}
+			else
+				throw new NotADirectoryException();
+		} catch (NotInTreeException e) {
+			e.printStackTrace();
+		} 
+	}
 
 
 
@@ -125,7 +125,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	// VIRTUAL DISK MANAGEMENT
 	// -----------------------------------------------------------------------------
 
-	
+
 	// delete a virtual disk from your computer
 	public void deleteVirtualDisk(){
 		File f = new File(this.getPath());
@@ -148,46 +148,52 @@ public class VirtualDisk implements Serializable, Visitor {
 
 	//for importing a new file structure into the existing structure form the computer(a file or a directory and all its sons)
 	//throws error if no space in vd, or if the parent is not in the tree
-	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException {
-		
+	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException, NotAnExistingFileException {
+
 		if (this.getNodeFromPath(parentPath) instanceof Directory){
 			Directory parent = (Directory) this.getNodeFromPath(parentPath);
 			File currentFile = new File(path);
-//			System.out.println(path);
-			long availableSpace = this.queryFreeSpace();
-			if (currentFile.isFile()){ // if it's a file we instantiate a Fichier object
-				Fichier f = new Fichier(currentFile.getName());
-				f.importFile(path);
-				f.setSize(currentFile.length());
-				if (f.getSize()<availableSpace){
-					this.tree.addNode(f);
-					this.tree.addEdge(new Edge(parent, f));
+			if (currentFile.exists()){
+				//			System.out.println(path);
+				long availableSpace = this.queryFreeSpace();
+				if (currentFile.isFile()){ // if it's a file we instantiate a Fichier object
+					Fichier f = new Fichier(currentFile.getName());
+					f.importFile(path);
+					f.setSize(currentFile.length());
+					if (f.getSize()<availableSpace){
+						this.tree.addNode(f);
+						this.tree.addEdge(new Edge(parent, f));
+					}
+					else{
+						throw new NoAvailableSpaceException("There is no space left on disk to add the file: " + f.getName());
+					}
 				}
-				else{
-					throw new NoAvailableSpaceException("There is no space left on disk to add the file: " + f.getName());
+				if (currentFile.isDirectory()){ // if it's a Directory we instantiate a Directory Object
+					Directory d = new Directory(currentFile.getName());
+					String filename = d.getName();
+					this.tree.addNode(d);
+
+					this.tree.addEdge(new Edge(parent,d));
+
+					String[] sonsPaths = currentFile.list();
+
+					for (String sonPath : sonsPaths){
+						//					System.out.println("path: "+ path);
+						//					System.out.println(sonPath);
+						//					System.out.println(this.getPath(d));
+						this.importFileStructure(path + "/" + sonPath, this.getPath(d));
+						//make sure to update path name
+
+					}
 				}
 			}
-			if (currentFile.isDirectory()){ // if it's a Directory we instantiate a Directory Object
-				Directory d = new Directory(currentFile.getName());
-				String filename = d.getName();
-				this.tree.addNode(d);
-				
-				this.tree.addEdge(new Edge(parent,d));
-				
-				String[] sonsPaths = currentFile.list();
-				
-				for (String sonPath : sonsPaths){
-//					System.out.println("path: "+ path);
-//					System.out.println(sonPath);
-//					System.out.println(this.getPath(d));
-					this.importFileStructure(path + "/" + sonPath, this.getPath(d));
-					//make sure to update path name
-					
-				}
-			}
+			else
+				throw new NotAnExistingFileException();
 		}
-		else
-			throw new NotADirectoryException("the indicated path isn't a directory");
+			else
+				throw new NotADirectoryException("the indicated path isn't a directory");
+		
+
 	}
 
 
@@ -198,7 +204,7 @@ public class VirtualDisk implements Serializable, Visitor {
 		Fichier f = new Fichier("fichier");
 		try{
 			f = (Fichier) this.getNodeFromPath(filename);
-//			System.out.println(f.getName());
+			//			System.out.println(f.getName());
 			f.exportFile(computerPath);
 		}
 		catch (NotInTreeException e) {
@@ -242,41 +248,41 @@ public class VirtualDisk implements Serializable, Visitor {
 		else
 			throw new NotADirectoryException();
 	}
-	
+
 	// copying a file hierarchy from one folder to another inside the virtual disk
 	//raises exception if there is no available space to recreate extra files
-    public void copy(String nodeToBeCopied, String parent) throws NotInTreeException, NotADirectoryException, NoAvailableSpaceException, ParentException{
-        Tree subTree = this.getSubTree(nodeToBeCopied);
-        Tree subTreeCopy = new Tree();
-        subTreeCopy.setNodeList(subTree.getNodeList());
-        subTreeCopy.setEdgeList(subTree.getEdgeList());
-        if (this.getTotalFileSize(subTreeCopy) < this.queryFreeSpace()){
-               for (Node n : subTreeCopy.getNodeList()){
-                      this.getTree().addNode(n);
-               }
-               for(Edge e : subTreeCopy.getEdgeList()){
-                      this.getTree().addEdge(e);
-               }
-               this.getTree().addEdge(new Edge(this.getNodeFromPath(parent),this.getNodeFromPath(nodeToBeCopied)));
-        }
-        else
-               throw new NoAvailableSpaceException("there is not enough space in the disk");
-  }
+	public void copy(String nodeToBeCopied, String parent) throws NotInTreeException, NotADirectoryException, NoAvailableSpaceException, ParentException{
+		Tree subTree = this.getSubTree(nodeToBeCopied);
+		Tree subTreeCopy = new Tree();
+		subTreeCopy.setNodeList(subTree.getNodeList());
+		subTreeCopy.setEdgeList(subTree.getEdgeList());
+		if (this.getTotalFileSize(subTreeCopy) < this.queryFreeSpace()){
+			for (Node n : subTreeCopy.getNodeList()){
+				this.getTree().addNode(n);
+			}
+			for(Edge e : subTreeCopy.getEdgeList()){
+				this.getTree().addEdge(e);
+			}
+			this.getTree().addEdge(new Edge(this.getNodeFromPath(parent),this.getNodeFromPath(nodeToBeCopied)));
+		}
+		else
+			throw new NoAvailableSpaceException("there is not enough space in the disk");
+	}
 
-    public Node duplicateNode(Node n){
-    	if (n instanceof Fichier){
-    		Fichier f = (Fichier) n;
-    		return f.duplicateFichier();
-    	}
-    	else{
-    		Directory d = (Directory)n;
-    		return d.duplicateDirectory();
-    	}
-    }
-    
-    public Tree duplicateTree(Tree tree) throws NotInTreeException{
-    	Node node = tree.getRoot();
-//    	System.out.print("root is "+ tree.getRoot().toString());
+	public Node duplicateNode(Node n){
+		if (n instanceof Fichier){
+			Fichier f = (Fichier) n;
+			return f.duplicateFichier();
+		}
+		else{
+			Directory d = (Directory)n;
+			return d.duplicateDirectory();
+		}
+	}
+
+	public Tree duplicateTree(Tree tree) throws NotInTreeException{
+		Node node = tree.getRoot();
+		//    	System.out.print("root is "+ tree.getRoot().toString());
 		Successors succ = new Successors();
 
 		Node duplicateNode = this.duplicateNode(node);
@@ -284,14 +290,14 @@ public class VirtualDisk implements Serializable, Visitor {
 		succ.aux3(node,duplicateNode);
 		Tree g = new Tree();
 		g.setNodeList(succ.duplicateNodes);
-//		g.getNodeList().remove(0);
-//		System.out.println(g.getNodeList().toString());
+		//		g.getNodeList().remove(0);
+		//		System.out.println(g.getNodeList().toString());
 		g.setEdgeList(succ.duplicateEdges);
-//		System.out.println(g.getEdgeList().toString());
+		//		System.out.println(g.getEdgeList().toString());
 		return g;
-    }
-    
-    
+	}
+
+
 	// -----------------------------------------------------------------------------
 	// PATH MANAGEMENT
 	// -----------------------------------------------------------------------------
@@ -300,7 +306,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	public String getPath(Node n) throws NotInTreeException{
 		if (this.getTree().contains(n)){
 			List<Node> nodes = new ArrayList<Node>();
-			
+
 			nodes = this.getTree().getListOfPredecessors(n);
 			String str = new String();
 			for (int i = 0; i < nodes.size(); i++)
@@ -389,15 +395,15 @@ public class VirtualDisk implements Serializable, Visitor {
 		List<Edge> edges = new ArrayList<Edge>();
 		List<Node> duplicateNodes = new ArrayList<Node>();
 		List<Edge> duplicateEdges = new ArrayList<Edge>();
-		
+
 		public void aux(Node node) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			if(node instanceof Fichier){
-//				this.nodes.add(node);
+				//				this.nodes.add(node);
 			}
 			else{
 				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
-//				this.nodes.add(node);
+				//				this.nodes.add(node);
 				for (Node n: succ){
 					this.nodes.add(n);
 					aux(n);
@@ -409,12 +415,12 @@ public class VirtualDisk implements Serializable, Visitor {
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			Node duplicateNodeSuc;
 			if(node instanceof Fichier){
-//				duplicateNode1=duplicateNode(node);
-//				this.duplicateNodes.add(duplicateNode1);
+				//				duplicateNode1=duplicateNode(node);
+				//				this.duplicateNodes.add(duplicateNode1);
 			}
 			else{
 				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
-				
+
 				for (Node n: succ){
 					duplicateNodeSuc=duplicateNode(n);
 					this.duplicateNodes.add(duplicateNodeSuc);
@@ -427,11 +433,11 @@ public class VirtualDisk implements Serializable, Visitor {
 		public void aux2(Node node) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			if(node instanceof Fichier){
-//				this.nodes.add(node);
+				//				this.nodes.add(node);
 			}
 			else{
 				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
-				
+
 				for (Node n: succ){
 					this.nodes.add(n);
 					this.edges.add(VirtualDisk.this.getTree().getEdgeFromNodes(node, n));
@@ -508,7 +514,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	public int getCapacity() {
 		return capacity;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -529,11 +535,11 @@ public class VirtualDisk implements Serializable, Visitor {
 		this.tree = tree;
 	}
 
-	
+
 	//-------------------------------------------------------------------------------------------
 	// VISITING
 	//-------------------------------------------------------------------------------------------
-	
+
 	@Override
 	public long visit(Fichier f) {
 		return f.getSize();
@@ -544,24 +550,24 @@ public class VirtualDisk implements Serializable, Visitor {
 		return 0;
 	}
 
-//	// query free space left in virtual disk
-//	public long queryFreeSpace(){
-//		long totalSize = this.tree.getTotalFileSize();
-//		return (this.capacity - totalSize);
-//	}
+	//	// query free space left in virtual disk
+	//	public long queryFreeSpace(){
+	//		long totalSize = this.tree.getTotalFileSize();
+	//		return (this.capacity - totalSize);
+	//	}
 
 	//return the total file size of all files contained in tree
-		public long getTotalFileSize(Tree t) {
-			long totalSize = 0;
-			for (Node n : t.getNodeList()){
-				if (n instanceof Fichier){
-					Fichier f = (Fichier) n;
-					totalSize = totalSize + f.getSize();
-				}
+	public long getTotalFileSize(Tree t) {
+		long totalSize = 0;
+		for (Node n : t.getNodeList()){
+			if (n instanceof Fichier){
+				Fichier f = (Fichier) n;
+				totalSize = totalSize + f.getSize();
 			}
-			return totalSize;
 		}
-	
+		return totalSize;
+	}
+
 	public long queryFreeSpace(){
 		long occupiedSpace = 0;
 		for (Node n : this.getTree().getNodeList()){
@@ -573,6 +579,6 @@ public class VirtualDisk implements Serializable, Visitor {
 		return (this.capacity - occupiedSpace);
 	}
 
-	
+
 
 }

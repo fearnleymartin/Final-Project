@@ -40,6 +40,9 @@ import treeImplementation.Node;
 import treeImplementation.NotInTreeException;
 import treeImplementation.ParentException;
 import treeImplementation.Tree;
+import dataTypes.NoAvailableSpaceException;
+import dataTypes.NotADirectoryException;
+import dataTypes.NotAnExistingFileException;
 import dataTypes.VirtualDisk;
 
 public class Frame extends JFrame implements TreeSelectionListener, ActionListener, MouseListener, KeyListener{
@@ -498,7 +501,19 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				String parent = TreeUtil.treePathToString(treepath);	
 				String hostpath = importFileStructureTextField.getText();
 
-				CLUI.impvfs(hostpath,vd.getName(), parent);
+				try {
+					vd.importFileStructure(hostpath, parent);
+				} catch (NoAvailableSpaceException e2) {
+					htmlView.setText("there isn't enough space left on your virtual disk");
+				} catch (NotInTreeException e2) {
+					e2.printStackTrace();
+				} catch (NotADirectoryException e2) {
+					htmlView.setText("you can't import anything in a Fichier object");
+				} catch (ParentException e2) {
+					e2.printStackTrace();
+				} catch (NotAnExistingFileException e2) {
+					htmlView.setText("the entered hostpath isn't a valid file");
+				}
 
 				try {
 					tree = TreeUtil.buildTreeFromVd(vd);
