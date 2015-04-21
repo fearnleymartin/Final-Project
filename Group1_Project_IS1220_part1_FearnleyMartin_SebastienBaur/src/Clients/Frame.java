@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
@@ -71,12 +72,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 	private JTextField commandLinePrinting = new JTextField(20);
 	private JEditorPane commandLineWriting = new JEditorPane();
-	protected JEditorPane htmlPane = new JEditorPane();
+//	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
 	private JPanel panUpRight = new JPanel();
 	private JPanel panDownRight = new JPanel();
 	private JTabbedPane tabbedPanUpRight = new JTabbedPane();
-	JScrollPane htmlView = new JScrollPane(htmlPane);
+	JTextArea htmlView = new JTextArea();
 	
 	//text fields
 	JTextField renameTextField = new JTextField(13);
@@ -85,7 +86,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	JTextField importFileStructureTextField = new JTextField(20); // maybe open a window of navigation AND maybe others text boxes
 	JTextField exportVFSTextField = new JTextField(13);
 	JTextField findTextField = new JTextField(20);
-	
+	JTextField helpTextField = new JTextField(20);
 	
 	private JButton buttonRename = new JButton("Rename");
 	private JButton buttonCopy = new JButton("Copy");
@@ -859,7 +860,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void valueChanged(TreeSelectionEvent arg0) {
 			treepath = arg0.getPath();
-			htmlPane.setText( TreeUtil.treePathToString(treepath));
+			htmlView.setText( TreeUtil.treePathToString(treepath));
 		}
 		
 	}
