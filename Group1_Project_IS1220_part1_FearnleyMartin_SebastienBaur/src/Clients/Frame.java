@@ -296,7 +296,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 						//						e1.printStackTrace();
 					}
 				}
-				System.out.println(res);
 				htmlView.setText(res);
 			} catch (NotInTreeException e1) {
 				htmlView.setText(filename + " cannot be found in "+vd.getName());
@@ -517,7 +516,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				repaint();
 			}
 			else{
-				System.out.println("No file/directory selected");
+				htmlView.setText("No file/directory selected");
 			}
 
 		}
@@ -535,12 +534,12 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					tempNode = vd.getNodeFromPath(path);
 					commandLinePrinting.setText(path + " has been copied");
 				} catch (NotInTreeException e1) {
-					System.out.println("path doesn't exists");
+					htmlView.setText("path doesn't exist");
 					e1.printStackTrace();
 				}
 			}
 			else{
-				System.out.println("No file/directory selected");
+				htmlView.setText("No file/directory selected");
 			}
 
 		}
@@ -583,11 +582,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				try {
 					tempTree = vd.getSubTree(path);
 					//                              tempTree = vd.duplicateTree(vd.getSubTree(path));
-					System.out.println(tempTree.toString());
+//					System.out.println(tempTree.toString());
 					tempNode = vd.getNodeFromPath(path);
 					commandLinePrinting.setText(path + " has been cut");
 					CLUI.rm(vd.getName(),path);
-					System.out.println(tempTree.toString());
+//					System.out.println(tempTree.toString());
 					try {
 						tree = TreeUtil.buildTreeFromVd(vd);
 					} catch (NotInTreeException e1) {
@@ -599,7 +598,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					revalidate();
 					repaint();
 				} catch (NotInTreeException e1) {
-					System.out.println("path doesn't exist");
+					htmlView.setText("path doesn't exist");
 					e1.printStackTrace();
 				}
 			}
@@ -656,14 +655,14 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 							for (Node n : subTreeCopy.getNodeList()){
 								vd.getTree().addNode(n);
-								System.out.println("add: " + n.toString());
+//								System.out.println("add: " + n.toString());
 
 							}
 							for(Edge e : subTreeCopy.getEdgeList()){
 								try {
 
 									vd.getTree().addEdge(e);
-									System.out.println("add edge: " + e.toString());
+//									System.out.println("add edge: " + e.toString());
 
 								} catch (ParentException e1) {
 									e1.printStackTrace();
@@ -675,7 +674,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 							try {
 								Edge edgeToAdd = new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot());
 								vd.getTree().addEdge(edgeToAdd);
-								System.out.println("add edge (parent) " + edgeToAdd.toString());
+//								System.out.println("add edge (parent) " + edgeToAdd.toString());
 							} catch (ParentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -691,9 +690,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							CLUI.ls(vd.getName(), "", "");
-							System.out.println(vd.getTree().getNodeList().toString());
-							System.out.println(vd.getTree().getEdgeList().toString());
+//							CLUI.ls(vd.getName(), "", "");
+//							System.out.println(vd.getTree().getNodeList().toString());
+//							System.out.println(vd.getTree().getEdgeList().toString());
 							pane.add(tree);
 							tree.addTreeSelectionListener(new SelectionListener());
 							revalidate();
@@ -937,7 +936,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				repaint();
 			}
 			else{
-				System.out.println("No file/directory selected");
+				htmlView.setText("No file/directory selected");
 			}
 		}
 
@@ -1041,10 +1040,10 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					revalidate();
 					repaint();
 				}
-				else {System.out.println("Please enter a new name for the file/directory");}
+				else {htmlView.setText("Please enter a new name for the file/directory");}
 			}
 			else{
-				System.out.println("No file/directory selected");
+				htmlView.setText("No file/directory selected");
 			}
 		}
 
@@ -1123,12 +1122,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			try {
-				htmlView.setText(String.valueOf(CLUI.getVdACNFromVfsname(tabbedPanUpRight.getSelectedComponent().getName()).getVd().queryFreeSpace()));
-			} catch (VirtualDiskDoesntExistException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (NullPointerException e2){}
+				htmlView.setText(String.valueOf(vd.queryFreeSpace()));
+			} catch (NullPointerException e2){}
 		}
 
 		@Override

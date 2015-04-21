@@ -21,8 +21,8 @@ public class test extends JFrame {
 //		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		f.add(tree);
 //		f.setVisible(true);
-		VirtualDisk vd456 = VirtualDisk.loadVirtualDisk("virtual disks/salu25t.ser");
-		System.out.println(vd456.getTree());
+		VirtualDisk vd456 = VirtualDisk.loadVirtualDisk("virtual disks/jeanmarcel.ser");
+		System.out.println(vd456.getName());
 	}
 
 }
