@@ -777,9 +777,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				String nameVFS = tabbedPanUpRight.getTitleAt(index);
 				try {
 					vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
-
 					tree = TreeUtil.buildTreeFromVd(vd);
-
 				} catch (VirtualDiskDoesntExistException e1) {
 					e1.printStackTrace();
 				} catch (NotInTreeException e2) {

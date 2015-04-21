@@ -8,7 +8,7 @@ import treeImplementation.*;
 
 public class VirtualDisk implements Serializable, Visitor {
 
-	private int capacity;
+	private long capacity;
 	private String name;
 	private Tree tree = new Tree();
 	private String path;
@@ -18,7 +18,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	// -----------------------------------------------------------------------------
 
 	//needs to raise error !! but breaks load method
-	public VirtualDisk(String name, String path, int capacity) {
+	public VirtualDisk(String name, String path, long capacity) {
 		this.name = name;
 		if (capacity >= 0){
 			this.capacity = capacity;
@@ -471,14 +471,15 @@ public class VirtualDisk implements Serializable, Visitor {
 	// GETTERS AND SETTERS AND EQUALS METHOD
 	//---------------------------------------------------------------------------------
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + capacity;
-		result = prime * result + ((tree == null) ? 0 : tree.hashCode());
+		result = prime * result + (int) (capacity ^ (capacity >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((tree == null) ? 0 : tree.hashCode());
 		return result;
 	}
 
@@ -493,11 +494,6 @@ public class VirtualDisk implements Serializable, Visitor {
 		VirtualDisk other = (VirtualDisk) obj;
 		if (capacity != other.capacity)
 			return false;
-		if (tree == null) {
-			if (other.tree != null)
-				return false;
-		} else if (!tree.equals(other.tree))
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -508,10 +504,17 @@ public class VirtualDisk implements Serializable, Visitor {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
+		if (tree == null) {
+			if (other.tree != null)
+				return false;
+		} else if (!tree.equals(other.tree))
+			return false;
 		return true;
 	}
+	
+	
 
-	public int getCapacity() {
+	public long getCapacity() {
 		return capacity;
 	}
 
