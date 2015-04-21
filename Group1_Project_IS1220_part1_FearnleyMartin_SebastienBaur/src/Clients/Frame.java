@@ -2,6 +2,7 @@ package Clients;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -567,6 +568,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
 			VirtualDisk vd = VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
 			JPanel vdContent = new JPanel();
+			vdContent.setName(splitEnteredText.get(0));
 			JTree arbre = new JTree();
 			try {
 				arbre = TreeUtil.buildTreeFromVd(vd);
@@ -607,8 +609,21 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
+			Component component = tabbedPanUpRight.getSelectedComponent();
+			int index = tabbedPanUpRight.getSelectedIndex();
+			String nameVFS = tabbedPanUpRight.getTitleAt(index);
+			CLUI.rmvfs(nameVFS);
+//			VirtualDisk searchedVD = new VirtualDisk();
+//			for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
+//			{
+//				VirtualDisk vd = vdACN.getVd();
+//				if (vd.getName().equals(name)){
+//					searchedVD = vd;
+//					break;
+//				}
+//			}
+//			VdcnManagement.vdList.remove(searchedVD);
+			tabbedPanUpRight.remove(component);
 		}
 		
 	}
