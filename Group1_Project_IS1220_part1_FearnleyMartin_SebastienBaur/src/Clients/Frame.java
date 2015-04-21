@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	//	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
 	//	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
+	
 
 	VirtualDisk vd;
 	JTree tree;
@@ -104,7 +106,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JButton buttonHelp = new JButton("Help");
 	private JButton buttonCut = new JButton("Cut");
 	private JButton buttonLoad = new JButton("Load");
-
+	private JButton buttonFreeSpace = new JButton("Query Free Space");
 
 
 	public Frame() throws NotInTreeException{
@@ -126,7 +128,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
 		this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
-		panLeft.setLayout(new GridLayout(12,2));
+		panLeft.setLayout(new GridLayout(13,2));
 
 		panLeft.add(buttonRename);
 		panLeft.add(renameTextField);
@@ -150,8 +152,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(new JPanel());
 		panLeft.add(buttonRemoveVFS);
 		panLeft.add(new JPanel());
+		panLeft.add(buttonFreeSpace);
+		panLeft.add(new JPanel());
 		panLeft.add(buttonHelp);
 		panLeft.add(helpTextField);
+		
 
 
 		//		panUpRight.add(tree);
@@ -186,6 +191,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		tabbedPanUpRight.addMouseListener(new TabMouseListener());
 		buttonCut.addMouseListener(new CutButtonListener());
 		buttonLoad.addMouseListener(new LoadButtonListener());
+		buttonFreeSpace.addMouseListener(new FreeSpaceButtonListener());
 
 		//		VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 		//		VdcnManagement.getVdList().add(vdcn);
@@ -1063,7 +1069,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			JPanel vdContent = new JPanel(); // creation of a pane that will contain the loaded virtual disk vd
 			try{
 				tabbedPanUpRight.addTab(vd.getName(), vdContent); // add a tab containing the JTree representing vd
-				index = tabbedPanUpRight.indexOfTab(vdContent.getName()); // updating of index
+				index = tabbedPanUpRight.indexOfTab(vd.getName()); // updating of index
+				System.out.println(index);
 				pane = (JPanel) tabbedPanUpRight.getComponentAt(index); // updating of pane
 				tabbedPanUpRight.setSelectedIndex(index); // selection of the tab that has just been added
 				tree = TreeUtil.buildTreeFromVd(vd); // creation of the tree from vd, which has just been loaded
@@ -1101,6 +1108,43 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 	}
 
+	public class FreeSpaceButtonListener implements MouseListener {
 
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			try {
+				htmlView.setText(String.valueOf(CLUI.getVdACNFromVfsname(tabbedPanUpRight.getSelectedComponent().getName()).getVd().queryFreeSpace()));
+			} catch (VirtualDiskDoesntExistException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (NullPointerException e2){}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
 
 }
