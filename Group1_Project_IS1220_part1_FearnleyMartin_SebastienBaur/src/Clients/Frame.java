@@ -98,6 +98,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JButton buttonExport = new JButton("Export VFS");
 	private JButton buttonFind = new JButton("Find");
 	private JButton buttonHelp = new JButton("Help");
+	private JButton buttonCut = new JButton("Cut");
 
 
 
@@ -119,7 +120,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
 		this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
 
-		panLeft.setLayout(new GridLayout(10,2));
+		panLeft.setLayout(new GridLayout(11,2));
 
 		panLeft.add(buttonRename);
 		panLeft.add(renameTextField);
@@ -132,6 +133,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(buttonFind);
 		panLeft.add(findTextField);
 		panLeft.add(buttonCopy);
+		panLeft.add(new JPanel());
+		panLeft.add(buttonCut);
 		panLeft.add(new JPanel());
 		panLeft.add(buttonPaste);
 		panLeft.add(new JPanel());
