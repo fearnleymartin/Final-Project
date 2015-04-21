@@ -265,8 +265,26 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-
+			String filename = findTextField.getText();
+			String res = "";
+			List<Node> list = null;
+			try {
+				list = vd.search(filename);
+				for (Node n : list){
+					
+					try {
+						res = res + vd.getPath(n) + "\n" ;
+					} catch (NotInTreeException e1) {
+						htmlView.setText("Cannot get the path of " +n.getName());
+//						e1.printStackTrace();
+					}
+				}
+				System.out.println(res);
+				htmlView.setText(res);
+			} catch (NotInTreeException e1) {
+				htmlView.setText(filename + " cannot be found in "+vd.getName());
+//				e1.printStackTrace();
+			} 
 		}
 
 		@Override
