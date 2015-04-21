@@ -286,24 +286,34 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			String filename = findTextField.getText();
-			String res = "";
-			List<Node> list = null;
-			try {
-				list = vd.search(filename);
-				for (Node n : list){
-
-					try {
-						res = res + vd.getPath(n) + "\n" ;
-					} catch (NotInTreeException e1) {
-						htmlView.setText("Cannot get the path of " +n.getName());
-						//						e1.printStackTrace();
-					}
+			if (VdcnManagement.vdList.isEmpty()){
+				htmlView.setText("There is no virtual disk to search in");
+			}
+			else{
+				if (filename.equals("") || filename.equals(null) || filename == null){
+					htmlView.setText("Please enter a valid research query");
 				}
-				htmlView.setText(res);
-			} catch (NotInTreeException e1) {
-				htmlView.setText(filename + " cannot be found in "+vd.getName());
-				//				e1.printStackTrace();
-			} 
+				else{
+					String res = "";
+					List<Node> list = null;
+					try {
+						list = vd.search(filename);
+						for (Node n : list){
+
+							try {
+								res = res + vd.getPath(n) + "\n" ;
+							} catch (NotInTreeException e1) {
+								htmlView.setText("Cannot get the path of " +n.getName());
+								//						e1.printStackTrace();
+							}
+						}
+						htmlView.setText(res);
+					} catch (NotInTreeException e1) {
+						htmlView.setText(filename + " cannot be found in "+vd.getName());
+						//				e1.printStackTrace();
+					} 
+				}
+			}
 		}
 
 		@Override
@@ -597,11 +607,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				try {
 					tempTree = vd.getSubTree(path);
 					//                              tempTree = vd.duplicateTree(vd.getSubTree(path));
-//					System.out.println(tempTree.toString());
+					//					System.out.println(tempTree.toString());
 					tempNode = vd.getNodeFromPath(path);
 					commandLinePrinting.setText(path + " has been cut");
 					CLUI.rm(vd.getName(),path);
-//					System.out.println(tempTree.toString());
+					//					System.out.println(tempTree.toString());
 					try {
 						tree = TreeUtil.buildTreeFromVd(vd);
 					} catch (NotInTreeException e1) {
@@ -670,14 +680,14 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 							for (Node n : subTreeCopy.getNodeList()){
 								vd.getTree().addNode(n);
-//								System.out.println("add: " + n.toString());
+								//								System.out.println("add: " + n.toString());
 
 							}
 							for(Edge e : subTreeCopy.getEdgeList()){
 								try {
 
 									vd.getTree().addEdge(e);
-//									System.out.println("add edge: " + e.toString());
+									//									System.out.println("add edge: " + e.toString());
 
 								} catch (ParentException e1) {
 									e1.printStackTrace();
@@ -689,7 +699,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 							try {
 								Edge edgeToAdd = new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot());
 								vd.getTree().addEdge(edgeToAdd);
-//								System.out.println("add edge (parent) " + edgeToAdd.toString());
+								//								System.out.println("add edge (parent) " + edgeToAdd.toString());
 							} catch (ParentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -705,9 +715,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-//							CLUI.ls(vd.getName(), "", "");
-//							System.out.println(vd.getTree().getNodeList().toString());
-//							System.out.println(vd.getTree().getEdgeList().toString());
+							//							CLUI.ls(vd.getName(), "", "");
+							//							System.out.println(vd.getTree().getNodeList().toString());
+							//							System.out.println(vd.getTree().getEdgeList().toString());
 							pane.add(tree);
 							tree.addTreeSelectionListener(new SelectionListener());
 							revalidate();
@@ -910,20 +920,25 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			Component component = tabbedPanUpRight.getSelectedComponent();
-			String nameVFS = tabbedPanUpRight.getTitleAt(index);
-			CLUI.rmvfs(nameVFS);
-			//			VirtualDisk searchedVD = new VirtualDisk();
-			//			for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
-			//			{
-			//				VirtualDisk vd = vdACN.getVd();
-			//				if (vd.getName().equals(name)){
-			//					searchedVD = vd;
-			//					break;
-			//				}
-			//			}
-			//			VdcnManagement.vdList.remove(searchedVD);
-			tabbedPanUpRight.remove(component);
+			if (VdcnManagement.vdList.isEmpty()){
+				htmlView.setText("there isn't any virtual disk to be removed");
+			}
+			else{
+				Component component = tabbedPanUpRight.getSelectedComponent();
+				String nameVFS = tabbedPanUpRight.getTitleAt(index);
+				CLUI.rmvfs(nameVFS);
+				//			VirtualDisk searchedVD = new VirtualDisk();
+				//			for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
+				//			{
+				//				VirtualDisk vd = vdACN.getVd();
+				//				if (vd.getName().equals(name)){
+				//					searchedVD = vd;
+				//					break;
+				//				}
+				//			}
+				//			VdcnManagement.vdList.remove(searchedVD);
+				tabbedPanUpRight.remove(component);
+			}
 		}
 
 
