@@ -3,12 +3,16 @@ package treeImplementation;
 import java.io.*;
 
 public class Edge implements Serializable {
+	protected static int uniqueId = 0;
+	protected int id;
 	private Node startNode;
 	private Node endNode;
 
 	public Edge(Node s, Node e){
 		this.startNode=s;
 		this.endNode=e;
+		this.id=uniqueId;
+		uniqueId+=1;
 	}
 
 	public Node getStartNode() {
@@ -37,6 +41,7 @@ public class Edge implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((endNode == null) ? 0 : endNode.hashCode());
+		result = prime * result + id;
 		result = prime * result
 				+ ((startNode == null) ? 0 : startNode.hashCode());
 		return result;
@@ -55,6 +60,8 @@ public class Edge implements Serializable {
 			if (other.endNode != null)
 				return false;
 		} else if (!endNode.equals(other.endNode))
+			return false;
+		if (id != other.id)
 			return false;
 		if (startNode == null) {
 			if (other.startNode != null)

@@ -37,6 +37,16 @@ public class Fichier extends treeImplementation.Node implements Serializable, Vi
 		this.id=Node.uniqueId;
 		Node.uniqueId+=1;
 	}
+	
+	public Fichier(String name, String type, long size, byte[] contenu) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.size = size;
+		this.contenu=contenu;
+		this.id=Node.uniqueId;
+		Node.uniqueId+=1;
+	}
 
 	//---------------------------------------------------------------------------------
 	// GETTERS AND SETTERS
@@ -179,7 +189,9 @@ public class Fichier extends treeImplementation.Node implements Serializable, Vi
 		return true;
 	}
 
-
+	public Fichier duplicateFichier(){
+		return new Fichier(this.name,this.type,this.size,this.contenu);
+	}
 
 
 }

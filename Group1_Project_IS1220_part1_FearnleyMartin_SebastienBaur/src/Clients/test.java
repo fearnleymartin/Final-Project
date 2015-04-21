@@ -1,13 +1,26 @@
 package Clients;
 
+import javax.swing.JFrame;
+import javax.swing.JTree;
+
+import treeImplementation.NotInTreeException;
 import dataTypes.VirtualDisk;
 
-public class test {
+public class test extends JFrame {
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  throws NotInTreeException, VirtualDiskDoesntExistException {
 		// TODO Auto-generated method stub
-		VirtualDisk vd = VirtualDisk.loadVirtualDisk("eval/vd1.ser");
-
+		CLUI.crvfs("pastetest",1000);
+		CLUI.impvfs("eval/pasteTest", "pastetest", "Home");
+		JTree tree= TreeUtil.buildTreeFromVd(CLUI.getVdACNFromVfsname("pastetest").getVd());
+		JFrame f = new JFrame();
+		f.setSize(700, 500);
+	
+		
+		
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.add(tree);
+		f.setVisible(true);
 	}
 
 }

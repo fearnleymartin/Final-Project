@@ -47,7 +47,9 @@ public class Directory extends treeImplementation.Node implements Serializable, 
 	}
 
 
-
+	public Directory duplicateDirectory(){
+		return new Directory(this.name);
+	}
 
 
 

@@ -26,6 +26,7 @@ public abstract class Node implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -39,6 +40,8 @@ public abstract class Node implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
+		if (id != other.id)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -47,7 +50,7 @@ public abstract class Node implements Serializable{
 		return true;
 	}
 
-
+	
 	
 
 }

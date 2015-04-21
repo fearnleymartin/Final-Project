@@ -149,9 +149,11 @@ public class VirtualDisk implements Serializable, Visitor {
 	//for importing a new file structure into the existing structure form the computer(a file or a directory and all its sons)
 	//throws error if no space in vd, or if the parent is not in the tree
 	public void importFileStructure(String path, String parentPath) throws NoAvailableSpaceException, NotInTreeException, NotADirectoryException, ParentException {
+		
 		if (this.getNodeFromPath(parentPath) instanceof Directory){
 			Directory parent = (Directory) this.getNodeFromPath(parentPath);
 			File currentFile = new File(path);
+//			System.out.println(path);
 			long availableSpace = this.queryFreeSpace();
 			if (currentFile.isFile()){ // if it's a file we instantiate a Fichier object
 				Fichier f = new Fichier(currentFile.getName());
@@ -169,11 +171,18 @@ public class VirtualDisk implements Serializable, Visitor {
 				Directory d = new Directory(currentFile.getName());
 				String filename = d.getName();
 				this.tree.addNode(d);
+				
 				this.tree.addEdge(new Edge(parent,d));
+				
 				String[] sonsPaths = currentFile.list();
+				
 				for (String sonPath : sonsPaths){
+//					System.out.println("path: "+ path);
+//					System.out.println(sonPath);
+//					System.out.println(this.getPath(d));
 					this.importFileStructure(path + "/" + sonPath, this.getPath(d));
 					//make sure to update path name
+					
 				}
 			}
 		}
@@ -254,6 +263,35 @@ public class VirtualDisk implements Serializable, Visitor {
                throw new NoAvailableSpaceException("there is not enough space in the disk");
   }
 
+    public Node duplicateNode(Node n){
+    	if (n instanceof Fichier){
+    		Fichier f = (Fichier) n;
+    		return f.duplicateFichier();
+    	}
+    	else{
+    		Directory d = (Directory)n;
+    		return d.duplicateDirectory();
+    	}
+    }
+    
+    public Tree duplicateTree(Tree tree) throws NotInTreeException{
+    	Node node = tree.getRoot();
+//    	System.out.print("root is "+ tree.getRoot().toString());
+		Successors succ = new Successors();
+
+		Node duplicateNode = this.duplicateNode(node);
+		succ.duplicateNodes.add(duplicateNode);
+		succ.aux3(node,duplicateNode);
+		Tree g = new Tree();
+		g.setNodeList(succ.duplicateNodes);
+//		g.getNodeList().remove(0);
+//		System.out.println(g.getNodeList().toString());
+		g.setEdgeList(succ.duplicateEdges);
+//		System.out.println(g.getEdgeList().toString());
+		return g;
+    }
+    
+    
 	// -----------------------------------------------------------------------------
 	// PATH MANAGEMENT
 	// -----------------------------------------------------------------------------
@@ -262,6 +300,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	public String getPath(Node n) throws NotInTreeException{
 		if (this.getTree().contains(n)){
 			List<Node> nodes = new ArrayList<Node>();
+			
 			nodes = this.getTree().getListOfPredecessors(n);
 			String str = new String();
 			for (int i = 0; i < nodes.size(); i++)
@@ -327,6 +366,7 @@ public class VirtualDisk implements Serializable, Visitor {
 	public List<Node> getAllSuccessors(String path) throws NotInTreeException{
 		Node node = this.getNodeFromPath(path);
 		Successors succ = new Successors();
+		succ.nodes.add(node);
 		succ.aux(node);
 		return succ.nodes;
 	}
@@ -336,6 +376,7 @@ public class VirtualDisk implements Serializable, Visitor {
 		Node node = this.getNodeFromPath(path);
 		Successors succ = new Successors();
 		succ.aux2(node);
+		succ.nodes.add(node);
 		Tree g = new Tree();
 		g.setNodeList(succ.nodes);
 		g.setEdgeList(succ.edges);
@@ -346,30 +387,53 @@ public class VirtualDisk implements Serializable, Visitor {
 	private class Successors{
 		List<Node> nodes = new ArrayList<Node>();
 		List<Edge> edges = new ArrayList<Edge>();
+		List<Node> duplicateNodes = new ArrayList<Node>();
+		List<Edge> duplicateEdges = new ArrayList<Edge>();
 		
 		public void aux(Node node) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
 			if(node instanceof Fichier){
-				this.nodes.add(node);
+//				this.nodes.add(node);
 			}
 			else{
 				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
-				this.nodes.add(node);
+//				this.nodes.add(node);
 				for (Node n: succ){
+					this.nodes.add(n);
 					aux(n);
 				}
 			}      
 		}      
-		
-		public void aux2(Node node) throws NotInTreeException{
+		//for duplicating tree
+		public void aux3(Node node, Node duplicateNode) throws NotInTreeException{
 			//Node node = VirtualDisk.this.getNodeFromPath(path); 
+			Node duplicateNodeSuc;
 			if(node instanceof Fichier){
-				this.nodes.add(node);
+//				duplicateNode1=duplicateNode(node);
+//				this.duplicateNodes.add(duplicateNode1);
 			}
 			else{
 				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
-				this.nodes.add(node);
+				
 				for (Node n: succ){
+					duplicateNodeSuc=duplicateNode(n);
+					this.duplicateNodes.add(duplicateNodeSuc);
+					this.duplicateEdges.add(new Edge(duplicateNode, duplicateNodeSuc));
+					aux3(n,duplicateNodeSuc);
+				}
+			}      
+		}
+		//for getting a subtree
+		public void aux2(Node node) throws NotInTreeException{
+			//Node node = VirtualDisk.this.getNodeFromPath(path); 
+			if(node instanceof Fichier){
+//				this.nodes.add(node);
+			}
+			else{
+				List<Node> succ = VirtualDisk.this.getTree().getSuccessors(node);
+				
+				for (Node n: succ){
+					this.nodes.add(n);
 					this.edges.add(VirtualDisk.this.getTree().getEdgeFromNodes(node, n));
 					aux2(n);
 				}
@@ -508,5 +572,7 @@ public class VirtualDisk implements Serializable, Visitor {
 		}
 		return (this.capacity - occupiedSpace);
 	}
+
+	
 
 }

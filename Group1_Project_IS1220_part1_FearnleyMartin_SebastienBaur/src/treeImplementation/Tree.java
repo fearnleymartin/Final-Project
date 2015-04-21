@@ -89,7 +89,7 @@ public class Tree implements Serializable{
 	public void addEdge(Edge e) throws ParentException, NotInTreeException{
 		// first we verify whether the endNode already has a predecessor. If it hasn't then you can add one
 		boolean test = true;
-		for (Edge edge : edgeList){
+//		for (Edge edge : edgeList){
 //			if (edge.getEndNode() instanceof Fichier && e.getEndNode() instanceof Fichier){
 //				Fichier f = (Fichier) edge.getEndNode();
 //				Fichier e2 = (Fichier) e.getEndNode();
@@ -108,17 +108,22 @@ public class Tree implements Serializable{
 //				if (f.equals(e.getEndNode()));
 //					test = false;
 //			}
-		}
+//		}
 		if (test){
-			if (this.nodeList.contains(e.getStartNode()) && this.nodeList.contains(e.getEndNode()))
-				{this.edgeList.add(e);
-//				System.out.println("Entered if");
+			if (1==1){
+				if (1==1){
+					this.edgeList.add(e);
+	//				System.out.println("Entered if");
 				}
-			
+				else{
+					throw new NotInTreeException("end node " + e.getEndNode() + " of your edge isn't part of the nodeList of the tree");
+				}
+				}
 			else{
-				throw new NotInTreeException("startNode or endNode of your edge isn't part of the nodeList of the tree");
+				throw new NotInTreeException("start node "+e.getStartNode() + " of your edge isn't part of the nodeList of the tree");
 			}
 		}
+			
 		else
 			{
 			throw new ParentException(e.getEndNode() + " already has a predecessor ! You can't add this edge");
@@ -222,9 +227,11 @@ public class Tree implements Serializable{
 	// REFACTOR ?
 	//return list of predecessors of a node
 	public List<Node> getListOfPredecessors(Node n){
+//		System.out.println("n " + n.toString());
 		List<Node> res = new ArrayList<Node>();
 		if (this.getPredecessor(n).size() != 0){
 			Node prec = this.getPredecessor(n).get(0);
+//			System.out.println("prec " + prec.toString());
 			res.add(prec);
 			res.addAll(this.getListOfPredecessors(prec));
 		}
@@ -234,12 +241,20 @@ public class Tree implements Serializable{
 	public Node getRoot() throws NotInTreeException{
 		if (!this.getNodeList().isEmpty()){
 			Node n = this.getNodeList().get(0);
+//			System.out.println(n.toString());
 			if (this.nodeList.size()==1){
 				return n;
 			}
 			else{
+				
 				List<Node> prec = getListOfPredecessors(n);
+//				System.out.println(prec.size());
+				if (prec.isEmpty()){
+					return n;
+				}
+				else{
 				return prec.get(prec.size()-1);
+				}
 			}
 		}
 		else throw new NotInTreeException("empty graph");
@@ -269,12 +284,15 @@ public class Tree implements Serializable{
 	// A CHANGER ?
 	// verifies whether the Node n is part of the tree or not
 	public boolean contains(Node n) {
-		if (this.nodeCount()==1)
-			return true;
-		else if (this.nodeCount()==0)
-			return false;
-		else 
-			return (this.getListOfPredecessors(n).size() != 0 || this.getSuccessors(n).size() != 0);
+//		if (this.nodeCount()==1)
+//			return true;
+//		else if (this.nodeCount()==0)
+//			return false;
+//		else 
+//			
+//			return (this.getListOfPredecessors(n).size() != 0 || this.getSuccessors(n).size() != 0);
+		if (this.nodeList.contains(n)){return true;}
+		else {return false;}
 	}
 
 

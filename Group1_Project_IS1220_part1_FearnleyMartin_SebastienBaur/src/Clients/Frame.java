@@ -2,6 +2,8 @@ package Clients;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +26,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -98,82 +101,87 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	
 	
 	public Frame() throws NotInTreeException{
-		tree = TreeUtil.buildTreeFromVd(vd);
-		VdcnManagement.getVdList().add(vdcn);
-		
-		this.setResizable(false);
-		this.setSize(1000, 500);
-		
-		JFrame frame = new JFrame();
-		this.setTitle("VFS");
-		
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		this.setLayout(new BorderLayout());
-	
-		htmlPane.setEditable(false);
-		
-		// ajout des panneaux aux bonnes positions
-		this.getContentPane().add(panLeft, BorderLayout.WEST);
-		this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
-		this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
-		
-		panLeft.setLayout(new GridLayout(10,2));
-		
-		panLeft.add(buttonRename);
-		panLeft.add(renameTextField);
-		panLeft.add(buttonCreateVFS);
-		panLeft.add(createVFSTextField);
-		panLeft.add(buttonImport);
-		panLeft.add(importFileStructureTextField);
-		panLeft.add(buttonExport);
-		panLeft.add(exportVFSTextField);
-		panLeft.add(buttonFind);
-		panLeft.add(findTextField);
-		panLeft.add(buttonCopy);
-		panLeft.add(new JPanel());
-		panLeft.add(buttonPaste);
-		panLeft.add(new JPanel());
-		panLeft.add(buttonRemoveFile);
-		panLeft.add(new JPanel());
-		panLeft.add(buttonRemoveVFS);
-		panLeft.add(new JPanel());
-		panLeft.add(buttonHelp);
-		
-		panUpRight.add(tree);
-		tabbedPanUpRight.addTab("vfs1",panUpRight);
-	
-		
-	    Box b = Box.createVerticalBox();
-	    Box lineWriting = Box.createHorizontalBox();
-	    lineWriting.add(new JLabel("Write here : "));
-	    lineWriting.add(commandLineWriting);
-	    b.add(lineWriting);
-	    Box lineReading = Box.createHorizontalBox();
-	    lineReading.add(new JLabel("Read here : "));
-	    lineReading.add(commandLinePrinting);
-	    b.add(lineReading);
-		panDownRight.add(b);
-		
-		
-		tree.addTreeSelectionListener(new SelectionListener());
-		buttonRename.addMouseListener(new RenameButtonListener());
-		buttonCopy.addMouseListener(new CopyButtonListener());
-		buttonPaste.addMouseListener(new PasteButtonListener());
-		buttonRemoveVFS.addMouseListener(new RemoveVFSButtonListener());
-		buttonRemoveFile.addMouseListener(new RemoveFileButtonListener());
-		buttonCreateVFS.addMouseListener(new CreateVFSButtonListener());
-		buttonImport.addMouseListener(new ImportButtonListener());
-		buttonExport.addMouseListener(new ExportButtonListener());
-		buttonFind.addMouseListener(new FindButtonListener());
-		buttonHelp.addMouseListener(new HelpButtonListener());
-		buttonImport.addMouseListener(new ImportButtonListener());
-		
-		this.setVisible(true);
-		
+//      this.setResizable(false);
+        this.setSize(1000, 500);
+        JFrame frame = new JFrame();
+        this.setTitle("VFS");
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());
 
-	}
+        htmlView.setEditable(false);
+        tree = TreeUtil.buildTreeFromVd(vd);
+        VdcnManagement.getVdList().add(vdcn);
+        
+        // ajout des panneaux aux bonnes positions
+        this.getContentPane().add(panLeft, BorderLayout.WEST);
+        this.getContentPane().add(tabbedPanUpRight, BorderLayout.CENTER);
+        this.getContentPane().add(panDownRight, BorderLayout.SOUTH);
+
+        panLeft.setLayout(new GridLayout(10,2));
+
+        panLeft.add(buttonRename);
+        panLeft.add(renameTextField);
+        panLeft.add(buttonCreateVFS);
+        panLeft.add(createVFSTextField);
+        panLeft.add(buttonImport);
+        panLeft.add(importFileStructureTextField);
+        panLeft.add(buttonExport);
+        panLeft.add(exportVFSTextField);
+        panLeft.add(buttonFind);
+        panLeft.add(findTextField);
+        panLeft.add(buttonCopy);
+        panLeft.add(new JPanel());
+        panLeft.add(buttonPaste);
+        panLeft.add(new JPanel());
+        panLeft.add(buttonRemoveFile);
+        panLeft.add(new JPanel());
+        panLeft.add(buttonRemoveVFS);
+        panLeft.add(new JPanel());
+        panLeft.add(buttonHelp);
+        panLeft.add(helpTextField);
+
+        panUpRight.add(tree);
+        tabbedPanUpRight.addTab("vfs1",panUpRight);
+
+        Box b = Box.createVerticalBox();
+//      b.setMinimumSize(new Dimension(900,100));
+        b.setPreferredSize(new Dimension(900,100));
+        Box lineWriting = Box.createHorizontalBox();
+        lineWriting.add(new JLabel("Write here : "));
+        lineWriting.add(commandLineWriting);
+        b.add(lineWriting);
+        Box lineReading = Box.createHorizontalBox();
+        lineReading.add(new JLabel("Read here : "));
+        JScrollPane htmlContainer = new JScrollPane(htmlView);
+        htmlView.setPreferredSize(new Dimension(1000,100));
+//      htmlContainer.setMinimumSize(new Dimension(700,100));
+        htmlContainer.setPreferredSize(new Dimension(700,100));
+         htmlContainer.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        lineReading.add(htmlContainer);
+        b.add(Box.createVerticalStrut(10));
+        b.add(lineReading);
+        panDownRight.add(b);
+
+
+        tree.addTreeSelectionListener(new SelectionListener());
+        buttonRename.addMouseListener(new RenameButtonListener());
+        buttonCopy.addMouseListener(new CopyButtonListener());
+        buttonPaste.addMouseListener(new PasteButtonListener());
+        buttonRemoveVFS.addMouseListener(new RemoveVFSButtonListener());
+        buttonRemoveFile.addMouseListener(new RemoveFileButtonListener());
+        buttonCreateVFS.addMouseListener(new CreateVFSButtonListener());
+        buttonImport.addMouseListener(new ImportButtonListener());
+        buttonExport.addMouseListener(new ExportButtonListener());
+        buttonFind.addMouseListener(new FindButtonListener());
+        buttonHelp.addMouseListener(new HelpButtonListener());
+        buttonImport.addMouseListener(new ImportButtonListener());
+
+        this.setVisible(true);
+
+
+  }
+
 
 	
 	@Override
@@ -272,10 +280,74 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	class HelpButtonListener implements MouseListener{
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+        public void mouseClicked(MouseEvent e) {
+               String str = new String();
+               String calledFunction = helpTextField.getText();
+               switch (calledFunction){
+               case "ls":
+                      str +="To list the information concerning files and directories contained in absolute position corresponding to pathname (if no pathname argument is given then the current position, i.e. the current directory, is listed) in a VFS named vfsname. The command ls should behave differently, depending on the optional argument arg:\n " ;
+                      str +="If args=\"\" (i.e. no args is given): in this case ls simply displays the list of names of files and directories contained in the current directory of the VFS.\n " ;
+                      str +="In this case ls vfs1 -l displays the list of names and dimension of files and directories contained in the current directory of the VFS.\n " ;
+                      str +="Syntax: ls <vfsname> <args> <pathname> \n " ;
+                      break;
+               case "crvfs":
+                      str +="To create a new VFS with name vfsname and maximal dimension dim bytes\n " ;
+                      str +="Syntax: crvfs <vfsname> <dim>\n " ;
+                      break;
+               case "cd":
+                      str +="Changes the current position in the VFS vfsname to the directory whose absolute name is <pathname>\n " ;
+                      str +="Notice that if pathname=. the current position is unchanged whether if pathname=..the current position becomes the parent directory of the current one. For example \"cd vfs1 /Pictures/London\" will set the current position of VFS called vfs1 to path \"/Pictures/London\", whereas \"cd vfs1 ..\" will set the current position to the parent directory of the current one hence to \"/Pictures\" if \"cd vfs1 ..\" is executed soon after \"cd vfs1 /Pictures/London\"\n " ;
+                      str +="Syntax: cd <vfsname> <pathname>\n " ;
+                      break;
+               case "mv":
+                      str +="To change the name of a file/directory with absolute name oldpath in the new absolute name newpath of the VFS named vfsname.\n " ;
+                      str +="Syntax: mv <vfsname> <oldpath> <newpath>\n " ;
+                      break;
+               case "cp":
+                      str +="To copy, within the VFS named vfsname, the content of a file/directory whose absolute name is source path into a target _le/directory whose absolute name is targetpath.\n " ;
+                      str +="cp <vfsname> <sourcepath> <targetpath>\n " ;
+                      break;
+               case "rm":
+                      str +="To remove a file/directory with absolute name pathname from the VFS named vfsname.\n " ;
+                      str +="Syntax: rm <vfsname> <pathname>\n " ;
+                      break;
+               case "rmvfs":
+                      str +="To delete a VFS named vfsname\n " ;
+                      str +="Syntax: rmvfs <vfsname>\n " ;
+                      break;
+               case "impvfs":
+                      str +="To import the content of the directory/file corresponding to absolute name hostpath on the host file system into the position vfspath on an existing VFS named vfsname.\n " ;
+                      str +="Syntax: impvfs <hostpath> <vfsname> <vfspath>\n " ;
+                      break;
+               case "expvfs":
+                      str +="To export an existing VFS named vfsname into the absolute path named hostpath of the host file system\n " ;
+                      str +="Syntax: expvfs <vfsname> <hostpath>\n " ;
+                      break;
+               case "free":
+                      str += "To display the quantity of free/occupied space for VFS named vfsname\n " ;
+                      str += "Syntax: free <vfsname>\n " ;
+                      break;
+               case "find":
+                      str +="To search if a file named filename is stored in the VFS named vfsname, shall return the absolute path of the sought _le if it is present in the VFS, null otherwise\n " ;
+                      str +="Syntax: find <vfsname> <filename>\n " ;
+                      break;
+               case "help":
+                      str +="To display an \"help message\" (similar to that of unix shell terminal) which gives information about how to use the command named command-name. If help is invoked without <command-name> argument then it should display a generic help message about how to use the CLUI (e.g. general syntax of a CLUI command, list of all CLUI commands name).\n " ;
+                      str +="help <command-name>\n " ;
+               case "gen":
+                      str +="Generates a tree of the current file system\n " ;
+                      str +="Syntax gen <vfsname>\n " ;
+                      break;
+               case "" : 
+                      str += "Commands take the following general syntax: command <arg1> <arg2> <arg3> \n";
+                      str += "The different commands are: ls, cd, mv, cp, rm, crvfs, rmvfs, impvfs, expvfs, free, find, help \n";
+                      str += "Type help <command> to find out more about a command \n";
+               default: 
+                      str += "";
+               }
+               htmlView.setText(str);
+        }
+
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
@@ -403,7 +475,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				try {
 					tempTree = vd.getSubTree(path);
 					tempNode = vd.getNodeFromPath(path);
-					System.out.println(path + " has been copied");
+					commandLinePrinting.setText(path + " has been copied");
 				} catch (NotInTreeException e1) {
 					System.out.println("path doesn't exists");
 					e1.printStackTrace();
@@ -452,54 +524,68 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			if (treepath != null){
 				String parent = TreeUtil.treePathToString(treepath);
 				if (tempTree!=null && tempNode!=null){
-					Tree subTree = tempTree;
-			        Tree subTreeCopy = new Tree();
-					subTreeCopy.setNodeList(subTree.getNodeList());
-			        subTreeCopy.setEdgeList(subTree.getEdgeList());
-			        if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
-			        	System.out.println(tempNode.toString());
-			        	System.out.println(parent.toString());
-			        	panUpRight.remove(tree);    
-			        	for (Node n : subTreeCopy.getNodeList()){
-			                      vd.getTree().addNode(n);
-			                      
-			            }
-		               for(Edge e : subTreeCopy.getEdgeList()){
-		                      try {
-								vd.getTree().addEdge(e);
-							} catch (ParentException e1) {
-								
-								e1.printStackTrace();
-							} catch (NotInTreeException e1) {
-								
-								e1.printStackTrace();
-							}
-		               }
-			                 
-		               try {
-						vd.getTree().addEdge(new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot()));
-		               } catch (ParentException e1) {
+			        Tree subTreeCopy = null;
+					try {
+						subTreeCopy = vd.duplicateTree(tempTree);
+					} catch (NotInTreeException e2) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-		               } catch (NotInTreeException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-		               }
-		               
-		               
-		               try {
-		            	   System.out.println("ok");
-							tree = TreeUtil.buildTreeFromVd(vd);
-		               } catch (NotInTreeException e1) {
+						e2.printStackTrace();
+					}
+					
+					if (subTreeCopy!=null){
+				        if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
+//				        	System.out.println(tempNode.toString());
+//				        	System.out.println(parent.toString());
+				        	
+				        	panUpRight.remove(tree);    
+				        	
+				        	for (Node n : subTreeCopy.getNodeList()){
+				                      vd.getTree().addNode(n);
+				                      System.out.println("add: " + n.toString());
+				                      
+				            }
+			               for(Edge e : subTreeCopy.getEdgeList()){
+			                      try {
+			                    	
+									vd.getTree().addEdge(e);
+									System.out.println("add edge: " + e.toString());
+									
+								} catch (ParentException e1) {
+									e1.printStackTrace();
+								} catch (NotInTreeException e1) {
+									e1.printStackTrace();
+								}
+			               }
+				                 
+			               try {
+			            	   Edge edgeToAdd = new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot());
+							vd.getTree().addEdge(edgeToAdd);
+							System.out.println("add edge (parent) " + edgeToAdd.toString());
+			               } catch (ParentException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-		               }
-		               CLUI.ls("vdlevel1", "", "");
-						panUpRight.add(tree);
-						tree.addTreeSelectionListener(new SelectionListener());
-						revalidate();
-						repaint();   
-			        }
+			               } catch (NotInTreeException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+			               }
+			               
+			               try {
+								tree = TreeUtil.buildTreeFromVd(vd);
+//								System.out.println("ok");
+			               } catch (NotInTreeException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+			               }
+			               CLUI.ls("vdlevel1", "", "");
+			               System.out.println(vd.getTree().getNodeList().toString());
+			               System.out.println(vd.getTree().getEdgeList().toString());
+			               panUpRight.add(tree);
+			               tree.addTreeSelectionListener(new SelectionListener());
+			               revalidate();
+			               repaint();   
+				        }
+				        else{commandLinePrinting.setText("error while copying");}
+				    }
 			        else {commandLinePrinting.setText("Not enough available space in virtual disk");}
 				}
 				else{commandLinePrinting.setText("Please copy something first");}
@@ -606,10 +692,24 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+        public void mouseReleased(MouseEvent e) {
+               Component component = tabbedPanUpRight.getSelectedComponent();
+               int index = tabbedPanUpRight.getSelectedIndex();
+               String nameVFS = tabbedPanUpRight.getTitleAt(index);
+               CLUI.rmvfs(nameVFS);
+               //                  VirtualDisk searchedVD = new VirtualDisk();
+               //                  for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
+               //                  {
+               //                         VirtualDisk vd = vdACN.getVd();
+               //                         if (vd.getName().equals(name)){
+               //                                searchedVD = vd;
+               //                                break;
+               //                         }
+               //                  }
+               //                  VdcnManagement.vdList.remove(searchedVD);
+               tabbedPanUpRight.remove(component);
+        }
+
 		
 	}
 	
