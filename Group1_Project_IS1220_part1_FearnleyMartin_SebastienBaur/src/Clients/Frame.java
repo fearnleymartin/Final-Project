@@ -475,9 +475,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-				JPanel pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
+//				JPanel pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
 				
-				pane.remove(tree);
+				pane.removeAll();
 				String parent = TreeUtil.treePathToString(treepath);	
 				String hostpath = importFileStructureTextField.getText();
 
@@ -560,7 +560,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (treepath != null){
-				pane.remove(tree);
+				pane.removeAll();
 				String path = TreeUtil.treePathToString(treepath);
 				try {
 					tempTree = vd.getSubTree(path);
@@ -634,7 +634,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 							//				        	System.out.println(tempNode.toString());
 							//				        	System.out.println(parent.toString());
 
-							pane.remove(tree);    
+							pane.removeAll();    
 
 							for (Node n : subTreeCopy.getNodeList()){
 								vd.getTree().addNode(n);
@@ -728,9 +728,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
 				
 				tree = TreeUtil.buildTreeFromVd(vd);
-//				selectedComponent.add
-//				tabbedPanUpRight.set
-//				Component component = tabbedPanUpRight.getSelectedComponent();
 				
 			} catch (VirtualDiskDoesntExistException e1) {
 				e1.printStackTrace();
@@ -813,6 +810,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					try {
 						tabbedPanUpRight.addTab(vd.getName(), vdContent);
 						index = tabbedPanUpRight.indexOfTab(vdContent.getName());
+						pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
 						tabbedPanUpRight.setSelectedIndex(index);
 						tree = TreeUtil.buildTreeFromVd(vd);
 						vdContent.add(tree);
@@ -881,7 +879,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			Component component = tabbedPanUpRight.getSelectedComponent();
-			int index = tabbedPanUpRight.getSelectedIndex();
 			String nameVFS = tabbedPanUpRight.getTitleAt(index);
 			CLUI.rmvfs(nameVFS);
 			//			VirtualDisk searchedVD = new VirtualDisk();
@@ -906,7 +903,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-				pane.remove(tree);
+				pane.removeAll();
 				String oldPath = TreeUtil.treePathToString(treepath);	
 
 				CLUI.rm(vd.getName(), oldPath);
@@ -1011,7 +1008,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			// TODO Auto-generated method stub
 			if (treepath != null){
 				if ((!renameTextField.getText().equals("")) && (renameTextField.getText()!=null)){
-					pane.remove(tree);
+					pane.removeAll();
 					String oldPath = TreeUtil.treePathToString(treepath);	
 					String newPath = renameTextField.getText();
 					CLUI.mv(vd.getName(), oldPath, newPath);
