@@ -48,8 +48,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	//	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
 	//	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
-
-
+	
 	VirtualDisk vd;
 	JTree tree;
 	TreePath treepath=null;
@@ -91,6 +90,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	JTextField exportVFSTextField = new JTextField(13);
 	JTextField findTextField = new JTextField(20);
 	JTextField helpTextField = new JTextField(20);
+	JTextField loadTextField = new JTextField(20);
 
 	private JButton buttonRename = new JButton("Rename");
 	private JButton buttonCopy = new JButton("Copy");
@@ -103,6 +103,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JButton buttonFind = new JButton("Find");
 	private JButton buttonHelp = new JButton("Help");
 	private JButton buttonCut = new JButton("Cut");
+	private JButton buttonLoad = new JButton("Load");
 
 
 
@@ -137,6 +138,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(exportVFSTextField);
 		panLeft.add(buttonFind);
 		panLeft.add(findTextField);
+		panLeft.add(buttonLoad);
+		panLeft.add(loadTextField);
 		panLeft.add(buttonCopy);
 		panLeft.add(new JPanel());
 		panLeft.add(buttonCut);
@@ -149,6 +152,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(new JPanel());
 		panLeft.add(buttonHelp);
 		panLeft.add(helpTextField);
+		
 
 		//		panUpRight.add(tree);
 		//		tabbedPanUpRight.addTab("vfs1",panUpRight);
@@ -181,6 +185,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		buttonHelp.addMouseListener(new HelpButtonListener());
 		tabbedPanUpRight.addMouseListener(new TabMouseListener());
 		buttonCut.addMouseListener(new CutButtonListener());
+		buttonLoad.addMouseListener(new LoadButtonListener());
 
 		//		VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 		//		VdcnManagement.getVdList().add(vdcn);
@@ -1043,6 +1048,40 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void valueChanged(TreeSelectionEvent arg0) {
 			treepath = arg0.getPath();
 			htmlView.setText( TreeUtil.treePathToString(treepath));
+		}
+
+	}
+	
+	public class LoadButtonListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
 		}
 
 	}
