@@ -93,7 +93,7 @@ public class Tree implements Serializable{
 //			if (edge.getEndNode() instanceof Fichier && e.getEndNode() instanceof Fichier){
 //				Fichier f = (Fichier) edge.getEndNode();
 //				Fichier e2 = (Fichier) e.getEndNode();
-//				if (f.equals(e.getEndNode()));
+//				if (f.equals(e2));
 //					test = false;
 //			}
 //			else if (edge.getEndNode() instanceof Directory && e.getEndNode() instanceof Fichier){
@@ -105,13 +105,13 @@ public class Tree implements Serializable{
 //			else if (edge.getEndNode() instanceof Directory && e.getEndNode() instanceof Directory){
 //				Directory f = (Directory) edge.getEndNode();
 //				Directory e2 = (Directory) e.getEndNode();
-//				if (f.equals(e.getEndNode()));
+//				if (f.equals(e2));
 //					test = false;
 //			}
 //		}
 		if (test){
-			if (1==1){
-				if (1==1){
+			if (this.contains(e.getStartNode())){
+				if (this.contains(e.getEndNode())){
 					this.edgeList.add(e);
 	//				System.out.println("Entered if");
 				}
