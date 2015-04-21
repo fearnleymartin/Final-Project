@@ -51,8 +51,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 
 	VirtualDisk vd;
-
-
 	JTree tree;
 	TreePath treepath=null;
 	Tree tempTree=null;
@@ -354,7 +352,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				//				break;
 			case "" : 
 				//				str += "Commands take the following general syntax: command <arg1> <arg2> <arg3> \n";
-				str += "Write the buttons' labels in the following text field and click again on Help to get more information about how to use them \n";
+				str += "Write the buttons' labels in the text field next to the Help button and click again on Help to get more information about how to use them \n";
 				break;
 			case "cut" : 
 				str += "";
@@ -462,7 +460,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				String parent = TreeUtil.treePathToString(treepath);	
 				String hostpath = importFileStructureTextField.getText();
 
-				CLUI.impvfs(hostpath,"vdlevel1", parent);
+				CLUI.impvfs(hostpath,vd.getName(), parent);
 
 				try {
 					tree = TreeUtil.buildTreeFromVd(vd);
@@ -498,8 +496,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					e1.printStackTrace();
 				}
 			}
-
-
 			else{
 				System.out.println("No file/directory selected");
 			}
@@ -567,452 +563,466 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		}
 
 
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
 		}
 
-		class PasteButtonListener implements MouseListener{
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (treepath != null){
-					String parent = TreeUtil.treePathToString(treepath);
-					if (tempTree!=null && tempNode!=null){
-						Tree subTreeCopy = null;
-						try {
-							subTreeCopy = vd.duplicateTree(tempTree);
-						} catch (NotInTreeException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}
+		}
 
-						if (subTreeCopy!=null){
-							if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
-								//				        	System.out.println(tempNode.toString());
-								//				        	System.out.println(parent.toString());
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
-								panUpRight.remove(tree);    
+		}
 
-								for (Node n : subTreeCopy.getNodeList()){
-									vd.getTree().addNode(n);
-									System.out.println("add: " + n.toString());
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
-								}
-								for(Edge e : subTreeCopy.getEdgeList()){
-									try {
+		}
 
-										vd.getTree().addEdge(e);
-										System.out.println("add edge: " + e.toString());
+	}
 
-									} catch (ParentException e1) {
-										e1.printStackTrace();
-									} catch (NotInTreeException e1) {
-										e1.printStackTrace();
-									}
-								}
+	class PasteButtonListener implements MouseListener{
 
-								try {
-									Edge edgeToAdd = new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot());
-									vd.getTree().addEdge(edgeToAdd);
-									System.out.println("add edge (parent) " + edgeToAdd.toString());
-								} catch (ParentException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								} catch (NotInTreeException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			if (treepath != null){
+				String parent = TreeUtil.treePathToString(treepath);
+				if (tempTree!=null && tempNode!=null){
+					Tree subTreeCopy = null;
+					try {
+						subTreeCopy = vd.duplicateTree(tempTree);
+					} catch (NotInTreeException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 
-								try {
-									tree = TreeUtil.buildTreeFromVd(vd);
-									//								System.out.println("ok");
-								} catch (NotInTreeException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								CLUI.ls("vdlevel1", "", "");
-								System.out.println(vd.getTree().getNodeList().toString());
-								System.out.println(vd.getTree().getEdgeList().toString());
-								panUpRight.add(tree);
-								tree.addTreeSelectionListener(new SelectionListener());
-								revalidate();
-								repaint();   
+					if (subTreeCopy!=null){
+						if (vd.getTotalFileSize(subTreeCopy) < vd.queryFreeSpace()){
+							//				        	System.out.println(tempNode.toString());
+							//				        	System.out.println(parent.toString());
+
+							panUpRight.remove(tree);    
+
+							for (Node n : subTreeCopy.getNodeList()){
+								vd.getTree().addNode(n);
+								System.out.println("add: " + n.toString());
+
 							}
-							else{commandLinePrinting.setText("error while copying");}
+							for(Edge e : subTreeCopy.getEdgeList()){
+								try {
+
+									vd.getTree().addEdge(e);
+									System.out.println("add edge: " + e.toString());
+
+								} catch (ParentException e1) {
+									e1.printStackTrace();
+								} catch (NotInTreeException e1) {
+									e1.printStackTrace();
+								}
+							}
+
+							try {
+								Edge edgeToAdd = new Edge(vd.getNodeFromPath(parent),subTreeCopy.getRoot());
+								vd.getTree().addEdge(edgeToAdd);
+								System.out.println("add edge (parent) " + edgeToAdd.toString());
+							} catch (ParentException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (NotInTreeException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+							try {
+								tree = TreeUtil.buildTreeFromVd(vd);
+								//								System.out.println("ok");
+							} catch (NotInTreeException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							CLUI.ls("vdlevel1", "", "");
+							System.out.println(vd.getTree().getNodeList().toString());
+							System.out.println(vd.getTree().getEdgeList().toString());
+							panUpRight.add(tree);
+							tree.addTreeSelectionListener(new SelectionListener());
+							revalidate();
+							repaint();   
 						}
-						else {commandLinePrinting.setText("Not enough available space in virtual disk");}
+						else{commandLinePrinting.setText("error while copying");}
 					}
-					else{commandLinePrinting.setText("Please copy something first");}
+					else {commandLinePrinting.setText("Not enough available space in virtual disk");}
 				}
-				else{commandLinePrinting.setText("Please select a place to copy to on the tree");}
+				else{commandLinePrinting.setText("Please copy something first");}
 			}
+			else{commandLinePrinting.setText("Please select a place to copy to on the tree");}
+		}
 
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
 		}
 
-		public class TabMouseListener implements MouseListener {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				int index = tabbedPanUpRight.getSelectedIndex();
-				String nameVFS = tabbedPanUpRight.getTitleAt(index);
-				try {
-					vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
-				} catch (VirtualDiskDoesntExistException e1) {
-					e1.printStackTrace();
-				}
-
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
 		}
 
-		class CreateVFSButtonListener implements MouseListener{
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
+		}
 
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	public class TabMouseListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			int index = tabbedPanUpRight.getSelectedIndex();
+			String nameVFS = tabbedPanUpRight.getTitleAt(index);
+			try {
+				vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
+				Component selectedComponent = tabbedPanUpRight.getTabComponentAt(index);
+				tree = TreeUtil.buildTreeFromVd(vd);
+//				selectedComponent.add
+//				tabbedPanUpRight.set
+//				Component component = tabbedPanUpRight.getSelectedComponent();
+				
+			} catch (VirtualDiskDoesntExistException e1) {
+				e1.printStackTrace();
+			} catch (NotInTreeException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
 			}
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class CreateVFSButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		// PEUT ETRE CHANGER LA FACON D'OBTENIR LE DERNIER INDICE EN UTILISANT getVdACNFromVfsname au cas où multithread
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// ordre des arguments : name capacity
+			String enteredText = createVFSTextField.getText();
+			List<String> splitEnteredText = CLUI.preTreatment(enteredText);
+			if (splitEnteredText.size() != 2){
+				htmlView.setText("You must enter first the name and second the capacity of the Vitual Disk !");
 			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			// PEUT ETRE CHANGER LA FACON D'OBTENIR LE DERNIER INDICE EN UTILISANT getVdACNFromVfsname au cas où multithread
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// ordre des arguments : name capacity
-				String enteredText = createVFSTextField.getText();
-				List<String> splitEnteredText = CLUI.preTreatment(enteredText);
-				if (splitEnteredText.size() != 2){
-					htmlView.setText("You must enter first the name and second the capacity of the Vitual Disk !");
+			else{
+				try{
+					CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
+					VirtualDisk tempVD = CLUI.getVdACNFromVfsname(splitEnteredText.get(0)).getVd();
+//					VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
+					JPanel vdContent = new JPanel();
+					vdContent.setName(splitEnteredText.get(0));
+//					JTree arbre = new JTree();
+//					try {
+//						arbre = TreeUtil.buildTreeFromVd(tempVD);
+//						vdContent.add(arbre);
+						tabbedPanUpRight.addTab(tempVD.getName(), vdContent);
+//						arbre.addTreeSelectionListener(new SelectionListener());
+//					} catch (NotInTreeException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 				}
-				else{
-					try{
-						CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
-						VirtualDisk vd = VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
-						JPanel vdContent = new JPanel();
-						vdContent.setName(splitEnteredText.get(0));
-						JTree arbre = new JTree();
-						try {
-							arbre = TreeUtil.buildTreeFromVd(vd);
-							tabbedPanUpRight.addTab(vd.getName(), arbre);
-						} catch (NotInTreeException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-					catch(NumberFormatException i){
-						htmlView.setText("The second argument must be the capacity of the Virtual Disk, of type int");
-					}
+				catch(NumberFormatException i){
+					htmlView.setText("Error : The second argument must be the capacity of the Virtual Disk, of type int");
+				} catch (VirtualDiskDoesntExistException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
 				}
+			}
 
 
-				VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
-				VdcnManagement.getVdList().add(vdcn);
-				int index = tabbedPanUpRight.getSelectedIndex();
-				try {
-					vd = CLUI.getVdACNFromVfsname(tabbedPanUpRight.getTitleAt(index)).getVd();
-				} catch (VirtualDiskDoesntExistException e1) {
-					e1.printStackTrace();
-				}
+			//				VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
+			//				VdcnManagement.getVdList().add(vdcn);
+			//				int index = tabbedPanUpRight.getSelectedIndex();
+			//				try {
+			//					vd = CLUI.getVdACNFromVfsname(tabbedPanUpRight.getTitleAt(index)).getVd();
+			//				} catch (VirtualDiskDoesntExistException e1) {
+			//					e1.printStackTrace();
+			//				}
+			//				try {
+			//					tree = TreeUtil.buildTreeFromVd(vd);
+			//				} catch (NotInTreeException e1) {
+			//					e1.printStackTrace();
+			//				}
+			//				panUpRight.add(tree);
+			//				tabbedPanUpRight.addTab(vd.getName(),panUpRight);
+			//				tree.addTreeSelectionListener(new SelectionListener());
+
+		}
+
+	}
+
+	class RemoveVFSButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			Component component = tabbedPanUpRight.getSelectedComponent();
+			int index = tabbedPanUpRight.getSelectedIndex();
+			String nameVFS = tabbedPanUpRight.getTitleAt(index);
+			CLUI.rmvfs(nameVFS);
+			//			VirtualDisk searchedVD = new VirtualDisk();
+			//			for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
+			//			{
+			//				VirtualDisk vd = vdACN.getVd();
+			//				if (vd.getName().equals(name)){
+			//					searchedVD = vd;
+			//					break;
+			//				}
+			//			}
+			//			VdcnManagement.vdList.remove(searchedVD);
+			tabbedPanUpRight.remove(component);
+		}
+
+
+	}
+
+	class RemoveFileButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if (treepath != null){
+				panUpRight.remove(tree);
+				String oldPath = TreeUtil.treePathToString(treepath);	
+
+				CLUI.rm("vdlevel1", oldPath);
 				try {
 					tree = TreeUtil.buildTreeFromVd(vd);
 				} catch (NotInTreeException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				panUpRight.add(tree);
-				tabbedPanUpRight.addTab(vd.getName(),panUpRight);
 				tree.addTreeSelectionListener(new SelectionListener());
-
+				revalidate();
+				repaint();
 			}
+			else{
+				System.out.println("No file/directory selected");
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
 
 		}
 
-		class RemoveVFSButtonListener implements MouseListener{
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				Component component = tabbedPanUpRight.getSelectedComponent();
-				int index = tabbedPanUpRight.getSelectedIndex();
-				String nameVFS = tabbedPanUpRight.getTitleAt(index);
-				CLUI.rmvfs(nameVFS);
-				//			VirtualDisk searchedVD = new VirtualDisk();
-				//			for (VdAndCurrentNode vdACN : VdcnManagement.vdList)
-				//			{
-				//				VirtualDisk vd = vdACN.getVd();
-				//				if (vd.getName().equals(name)){
-				//					searchedVD = vd;
-				//					break;
-				//				}
-				//			}
-				//			VdcnManagement.vdList.remove(searchedVD);
-				tabbedPanUpRight.remove(component);
-			}
-
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
 
 		}
 
-		class RemoveFileButtonListener implements MouseListener{
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				if (treepath != null){
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class MoveButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class RenameButtonListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			if (treepath != null){
+				if ((!renameTextField.getText().equals("")) && (renameTextField.getText()!=null)){
 					panUpRight.remove(tree);
 					String oldPath = TreeUtil.treePathToString(treepath);	
-
-					CLUI.rm("vdlevel1", oldPath);
+					String newPath = renameTextField.getText();
+					CLUI.mv("vdlevel1", oldPath, newPath);
 					try {
 						tree = TreeUtil.buildTreeFromVd(vd);
-					} catch (NotInTreeException e1) {
+					} catch (NotInTreeException e) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e.printStackTrace();
 					}
 					panUpRight.add(tree);
 					tree.addTreeSelectionListener(new SelectionListener());
 					revalidate();
 					repaint();
 				}
-				else{
-					System.out.println("No file/directory selected");
-				}
+				else {System.out.println("Please enter a new name for the file/directory");}
 			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
+			else{
+				System.out.println("No file/directory selected");
 			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
 		}
 
-		class MoveButtonListener implements MouseListener{
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
 
 		}
-
-		class RenameButtonListener implements MouseListener{
-
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				if (treepath != null){
-					if ((!renameTextField.getText().equals("")) && (renameTextField.getText()!=null)){
-						panUpRight.remove(tree);
-						String oldPath = TreeUtil.treePathToString(treepath);	
-						String newPath = renameTextField.getText();
-						CLUI.mv("vdlevel1", oldPath, newPath);
-						try {
-							tree = TreeUtil.buildTreeFromVd(vd);
-						} catch (NotInTreeException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						panUpRight.add(tree);
-						tree.addTreeSelectionListener(new SelectionListener());
-						revalidate();
-						repaint();
-					}
-					else {System.out.println("Please enter a new name for the file/directory");}
-				}
-				else{
-					System.out.println("No file/directory selected");
-				}
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-		}
-
-		class SelectionListener implements TreeSelectionListener{
-
-			@Override
-			public void valueChanged(TreeSelectionEvent arg0) {
-				treepath = arg0.getPath();
-				htmlView.setText( TreeUtil.treePathToString(treepath));
-			}
-
-		}
-
-
 
 	}
+	class SelectionListener implements TreeSelectionListener{
+
+		@Override
+		public void valueChanged(TreeSelectionEvent arg0) {
+			treepath = arg0.getPath();
+			htmlView.setText( TreeUtil.treePathToString(treepath));
+		}
+
+	}
+
+
+
+}
