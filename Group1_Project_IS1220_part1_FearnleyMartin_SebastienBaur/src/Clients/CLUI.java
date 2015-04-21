@@ -6,7 +6,7 @@ import treeImplementation.*;
 import dataTypes.*;
 
 public class CLUI {
-	
+
 	//list contents of directory
 	public static void ls(String vfsname, String args, String pathname){
 		VdAndCurrentNode vdcn;
@@ -14,7 +14,7 @@ public class CLUI {
 			vdcn = getVdACNFromVfsname(vfsname);
 			VirtualDisk vd = vdcn.getVd();
 			Node currentNode = vdcn.getCurrentNode();
-			
+
 			//all files & folders
 			if (pathname.equals("")){
 				switch(args){
@@ -35,8 +35,8 @@ public class CLUI {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
-					
-				//prints size too
+
+					//prints size too
 				case "-l":
 					List<Node> succ2;
 					try {
@@ -56,8 +56,8 @@ public class CLUI {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
-					
-					
+
+
 				}
 			}
 			//files & folders in pathname
@@ -72,7 +72,7 @@ public class CLUI {
 								System.out.println(n.getName()+"    "+"f");
 							}
 							else{
-								
+
 								System.out.println(n.getName()+"     "+"d");
 							}
 						}
@@ -81,14 +81,14 @@ public class CLUI {
 						System.out.println("The current node: "+ currentNode + " is irretrievable");
 						e.printStackTrace();
 					}
-					
-				//prints size too
+
+					//prints size too
 				case "-l":
 					List<Node> succ2;
 					try {
 						succ2 = vd.getAllSuccessors(pathname);
 						for (Node n : succ2){
-//							System.out.println(succ2);
+							//							System.out.println(succ2);
 							if (n instanceof Fichier){
 								System.out.println(n.getName()+"    "+((Fichier)n).getSize() + "    "+"f");
 							}
@@ -109,9 +109,9 @@ public class CLUI {
 			System.out.print("No virtual disk called '" + vfsname + "' exists");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	//returns vd and its current node object from the name of a vfs
 	public static VdAndCurrentNode getVdACNFromVfsname(String vfsname) throws VirtualDiskDoesntExistException{
 		for (VdAndCurrentNode vdcn : VdcnManagement.getVdList()){
@@ -121,7 +121,7 @@ public class CLUI {
 		}
 		throw new VirtualDiskDoesntExistException("No virtual disk called '" + vfsname + "' exists");
 	}
-	
+
 	//add in the different cases
 	//navigate to directory
 	public static void cd(String vfsname, String pathname){
@@ -137,24 +137,24 @@ public class CLUI {
 				System.out.println(pathname + " not found");
 				e.printStackTrace();
 			}
-			
+
 		} catch (VirtualDiskDoesntExistException e) {
 			System.out.println("No virtual disk called '" + vfsname + "' exists");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	//to create a new virtual disk
 	//what if vd already exists with this name ?
 	//limit maximum size to stop user doing anything stupid
 	public static void crvfs(String vfsname, int dim) {
-		
+
 		VirtualDisk vd = VirtualDisk.createVirtualDisk(vfsname, "Virtual Disks/"+ vfsname+ ".ser", dim);
 		VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 		VdcnManagement.getVdList().add(vdcn);
 	}
-	
+
 	//renames files/directory
 	public static void mv (String vfsname, String oldpath, String newpath) {
 		VdAndCurrentNode vdcn;
@@ -172,7 +172,7 @@ public class CLUI {
 			System.out.println("No virtual disk called '" + vfsname + "' exists");
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	//doesn't work correctly !!!!!!!!!!
@@ -215,9 +215,9 @@ public class CLUI {
 			System.out.println(vfsname +" doesn't exist");
 
 		}
-		
+
 	}
-	
+
 	//exports home aswell
 	public static void expvfs(String vfsname, String hostpath){
 		VdAndCurrentNode vdcn = null;
@@ -235,9 +235,9 @@ public class CLUI {
 			System.out.println(vfsname +" doesn't exist");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	//queries free space on the vd
 	public static void free(String vfsname){
 		try {
@@ -249,7 +249,7 @@ public class CLUI {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//remove a vd
 	public static void rmvfs (String vfsname){
 		VdAndCurrentNode vdcn;
@@ -261,9 +261,9 @@ public class CLUI {
 			System.out.println("No virtual disk called '" + vfsname + "' exists");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	//remove file/directory from vd
 	public static void rm(String vfsname, String pathname){
 		VdAndCurrentNode vdcn;
@@ -280,10 +280,10 @@ public class CLUI {
 			System.out.println(vfsname +" doesn't exist");
 			e.printStackTrace();
 		}
-		
+
 
 	}
-	
+
 	//unused
 	public static String invertedCommaRemover(String str){
 		if ((str.startsWith("\""))&& (str.endsWith("\""))){
@@ -314,7 +314,7 @@ public class CLUI {
 				System.out.println(filename + " cannot be found in "+vfsname);
 				e.printStackTrace();
 			}
-			
+
 		} catch (VirtualDiskDoesntExistException e) {
 			System.out.println(vfsname +" doesn't exist");
 			e.printStackTrace();
@@ -387,7 +387,7 @@ public class CLUI {
 		System.out.println("The different commands are: ls, cd, mv, cp, rm, crvfs, rmvfs, impvfs, expvfs, free, find, help");
 		System.out.println("Type help <command> to find out more about a command");
 	}
-	
+
 	//cuts up the string argument received from the user input into an array of string arguments
 	//if path name includes spaces, then the path name must be put inside inverted commas
 	public static List<String> preTreatment(String str){
@@ -406,9 +406,9 @@ public class CLUI {
 		while (compteur < strLen){
 			//tests for a space followed by an inverted comma, i.e. the beginning of an argument in inverted commas
 			if (Character.toString((str.charAt(compteur))).equals(" ")&&Character.toString((str.charAt(compteur+1))).equals("\"")){
-//				System.out.println("space comma");
+				//				System.out.println("space comma");
 				if (!inInvertedCommas&&!precededByInvertedCommas){
-//					System.out.println(str.substring(lastSpace, compteur));
+					//					System.out.println(str.substring(lastSpace, compteur));
 					list.add(str.substring(lastSpace, compteur));
 					lastSpace = compteur+1;
 				}
@@ -416,13 +416,13 @@ public class CLUI {
 				compteur=compteur+2;
 				inInvertedCommas=true;
 				precededByInvertedCommas=false;
-				}
+			}
 			//tests for the end of a string in inverted commas
 			else if (Character.toString((str.charAt(compteur))).equals("\"")){
-				
-//				System.out.println("comma");
+
+				//				System.out.println("comma");
 				list.add(str.substring(lastComma, compteur));
-//				System.out.println(str.substring(lastComma, compteur));
+				//				System.out.println(str.substring(lastComma, compteur));
 				lastComma = compteur+1;
 				lastSpace = compteur+2;
 				compteur++;
@@ -432,7 +432,7 @@ public class CLUI {
 			//tests for a space, i.e. athe start of a new argument, unless in inverted commas
 			else if(Character.toString((str.charAt(compteur))).equals(" ")){
 				if (!inInvertedCommas&&!precededByInvertedCommas){
-//					System.out.println(str.substring(lastSpace, compteur));
+					//					System.out.println(str.substring(lastSpace, compteur));
 					list.add(str.substring(lastSpace, compteur));
 					lastSpace = compteur+1;
 					compteur++;
@@ -445,11 +445,11 @@ public class CLUI {
 			}
 			//if reaches end of string
 			else if(compteur == strLen-1){
-//				System.out.println(str.substring(lastSpace, compteur+1));
+				//				System.out.println(str.substring(lastSpace, compteur+1));
 				list.add(str.substring(lastSpace, compteur+1));
-				
+
 				compteur++;
-				
+
 			}
 			//if none of these characters are encountered, we continue to iterate through the string
 			else{
@@ -458,13 +458,13 @@ public class CLUI {
 		}
 		return list;
 	}
-	
+
 	//interprets the user input and calls the correct function (aftr pre treatment)
- 	public static void understand(String str) throws NumberFormatException, NotInTreeException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException, ParentException{
+	public static void understand(String str) throws NumberFormatException, NotInTreeException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException, ParentException{
 		//pre-treat string
- 		List<String> strList = preTreatment(str);
- 		//create an array from list returned
- 		String[] strs =  new String[strList.size()];
+		List<String> strList = preTreatment(str);
+		//create an array from list returned
+		String[] strs =  new String[strList.size()];
 		for (int i = 0; i<strList.size();i++){
 			strs[i]=strList.get(i);
 		}
@@ -479,7 +479,7 @@ public class CLUI {
 					ls(strs[1],"-1","");
 				}
 				else{ls(strs[1],"",strs[2]);
-			}
+				}
 			}
 			else{
 				ls(strs[1],strs[2],strs[3]);
@@ -570,59 +570,59 @@ public class CLUI {
 			else if (strs.length==2&&(strs[1] instanceof String)){help(strs[1]);}
 			else{System.out.println("Invalid command, refer to help to see syntax");}
 			break;
-//		case "gen":
-//			if (strs.length==2){
-//				new GenerateTree(getVdACNFromVfsname(strs[1]).getVd());
-//			}
-//			else {
-//				System.out.println("Invalid command, refer to help to see syntax");
-//			}
-//			break;
+			//		case "gen":
+			//			if (strs.length==2){
+			//				new GenerateTree(getVdACNFromVfsname(strs[1]).getVd());
+			//			}
+			//			else {
+			//				System.out.println("Invalid command, refer to help to see syntax");
+			//			}
+			//			break;
 		default: System.out.println("Not a valid command, please type help for more information");
 		}
-		}
-	
+	}
+
 	public static void main(String[] args) throws NotInTreeException, VirtualDiskDoesntExistException, NoAvailableSpaceException, NotADirectoryException, ParentException{
 		//create vfs1
 		crvfs("vfs1",1000);
 		//create vfs2
-//		crvfs("vfs2",1000);
-//		System.out.println(VdcnManagement.getVdList().get(0).getVd());
-//		System.out.println(VdcnManagement.getVdList().get(0).getCurrentNode());
+		//		crvfs("vfs2",1000);
+		//		System.out.println(VdcnManagement.getVdList().get(0).getVd());
+		//		System.out.println(VdcnManagement.getVdList().get(0).getCurrentNode());
 		//acces vfs1 and vfs2
-//		VdAndCurrentNode vfs1 = getVdACNFromVfsname("vfs1");
-//		VdAndCurrentNode vfs2 = getVdACNFromVfsname("vfs2");
-//		System.out.println(vfs1.toString());
+		//		VdAndCurrentNode vfs1 = getVdACNFromVfsname("vfs1");
+		//		VdAndCurrentNode vfs2 = getVdACNFromVfsname("vfs2");
+		//		System.out.println(vfs1.toString());
 		//import level 1
 		impvfs("eval/Host/level 1","vfs1","Home");
-//		GenerateTree gt = new GenerateTree(getVdACNFromVfsname("vfs1").getVd());
-//		System.out.println(vfs1.getVd().getTree().getNodeList());
-//		//navigate to level 2
-//		cd("vfs1","Home/level 1/level 2");
-//		System.out.println(vfs1.getCurrentNode());
-//		ls("vfs1","-1","");
+		//		GenerateTree gt = new GenerateTree(getVdACNFromVfsname("vfs1").getVd());
+		//		System.out.println(vfs1.getVd().getTree().getNodeList());
+		//		//navigate to level 2
+		//		cd("vfs1","Home/level 1/level 2");
+		//		System.out.println(vfs1.getCurrentNode());
+		//		ls("vfs1","-1","");
 		//rename level 1 to level 1 renamed
-//		mv("vfs1","Home/level 1","Home/level 1 renamed");
-//		gt.UpdateTree();
-//		ls("vfs1","","Home");
-//		//put test text.txt in level 2 bis
-//		cp("vfs1","Home/level 1 renamed/level 2/test text.txt","Home/level 1 renamed/level 2 bis/test text.txt");
-//		//display trees
-//		GenerateTree gt = new GenerateTree(vfs1.getVd());
-//		new GenerateTree(vfs2.getVd());
+		//		mv("vfs1","Home/level 1","Home/level 1 renamed");
+		//		gt.UpdateTree();
+		//		ls("vfs1","","Home");
+		//		//put test text.txt in level 2 bis
+		//		cp("vfs1","Home/level 1 renamed/level 2/test text.txt","Home/level 1 renamed/level 2 bis/test text.txt");
+		//		//display trees
+		//		GenerateTree gt = new GenerateTree(vfs1.getVd());
+		//		new GenerateTree(vfs2.getVd());
 		expvfs("vfs1","eval/Host/moving test");
 		System.out.println("What would you like to do ? Type help to see the commands");
-		
-		
+
+
 		Scanner scan = new Scanner(System.in);
 		while (true){
-		String str = scan.nextLine();
-		
-//		List<String> tab = (preTreatment(str));
-//		for (String s : tab){System.out.println("element: " +s);}
-		understand(str);
+			String str = scan.nextLine();
+
+			//		List<String> tab = (preTreatment(str));
+			//		for (String s : tab){System.out.println("element: " +s);}
+			understand(str);
 		}
-		
+
 	}
 }
 

@@ -49,7 +49,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	//	VirtualDisk vd = VirtualDisk.loadVirtualDisk("virtual disks/vdlevel1.ser");
 	//	VdAndCurrentNode vdcn = new VdAndCurrentNode(vd);
 
-	
+
 
 	VirtualDisk vd;
 	JTree tree;
@@ -156,7 +156,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(new JPanel());
 		panLeft.add(buttonHelp);
 		panLeft.add(helpTextField);
-		
+
 
 
 		//		panUpRight.add(tree);
@@ -1063,23 +1063,26 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			String enteredPath = loadTextField.getText();
-			vd = VirtualDisk.loadVirtualDisk(enteredPath);
-			VdAndCurrentNode vdcn = new VdAndCurrentNode(vd); // the virtual disk vd should also be added to the list of virtual disks already opened
-			VdcnManagement.vdList.add(vdcn);
-			JPanel vdContent = new JPanel(); // creation of a pane that will contain the loaded virtual disk vd
-			try{
-				tabbedPanUpRight.addTab(vd.getName(), vdContent); // add a tab containing the JTree representing vd
-				index = tabbedPanUpRight.indexOfTab(vd.getName()); // updating of index
-				System.out.println(index);
-				pane = (JPanel) tabbedPanUpRight.getComponentAt(index); // updating of pane
-				tabbedPanUpRight.setSelectedIndex(index); // selection of the tab that has just been added
-				tree = TreeUtil.buildTreeFromVd(vd); // creation of the tree from vd, which has just been loaded
-				vdContent.add(tree); // adding of the newly created tree to vdContent, which is contained in the new tab of tabbedPanUpRight
-				tree.addTreeSelectionListener(new SelectionListener()); // adding of a mouse listener, such as clicking on the tree causes an action of the program
-			}
-			catch(NotInTreeException e1){
-				e1.printStackTrace();
+			if (enteredPath.equals(null) || enteredPath.equals(""))
+				htmlView.setText("please enter a valid path");
+			else{
+				vd = VirtualDisk.loadVirtualDisk(enteredPath);
+				VdAndCurrentNode vdcn = new VdAndCurrentNode(vd); // the virtual disk vd should also be added to the list of virtual disks already opened
+				VdcnManagement.vdList.add(vdcn);
+				JPanel vdContent = new JPanel(); // creation of a pane that will contain the loaded virtual disk vd
+				try{
+					tabbedPanUpRight.addTab(vd.getName(), vdContent); // add a tab containing the JTree representing vd
+					index = tabbedPanUpRight.indexOfTab(vd.getName()); // updating of index
+					pane = (JPanel) tabbedPanUpRight.getComponentAt(index); // updating of pane
+					tabbedPanUpRight.setSelectedIndex(index); // selection of the tab that has just been added
+					tree = TreeUtil.buildTreeFromVd(vd); // creation of the tree from vd, which has just been loaded
+					vdContent.add(tree); // adding of the newly created tree to vdContent, which is contained in the new tab of tabbedPanUpRight
+					tree.addTreeSelectionListener(new SelectionListener()); // adding of a mouse listener, such as clicking on the tree causes an action of the program
 				}
+				catch(NotInTreeException e1){
+					e1.printStackTrace();
+				}
+			}
 		}
 
 		@Override
