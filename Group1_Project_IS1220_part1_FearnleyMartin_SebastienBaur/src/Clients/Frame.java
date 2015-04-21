@@ -382,9 +382,16 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			VirtualDisk vd1 = new VirtualDisk();
+			int index = tabbedPanUpRight.getSelectedIndex();
+			try {
+				vd1 = CLUI.getVdACNFromVfsname(tabbedPanUpRight.getTitleAt(index)).getVd();
+			} catch (VirtualDiskDoesntExistException e1) {
+				e1.printStackTrace();
+			}
 			String hostpath = exportVFSTextField.getText();
 			if (!hostpath.equals("")&& hostpath!=null){
-				CLUI.expvfs(vd.getName(), hostpath);
+				CLUI.expvfs(vd1.getName(), hostpath);
 			}
 
 		}
@@ -648,23 +655,35 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		}
 
 		// PEUT ETRE CHANGER LA FACON D'OBTENIR LE DERNIER INDICE EN UTILISANT getVdACNFromVfsname au cas où multithread
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// ordre des arguments : name capacity
-			String enteredText = createVFSTextField.getText();
-			List<String> splitEnteredText = CLUI.preTreatment(enteredText);
-			CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
-			VirtualDisk vd = VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
-			JPanel vdContent = new JPanel();
-			JTree arbre = new JTree();
-			try {
-				arbre = TreeUtil.buildTreeFromVd(vd);
-				tabbedPanUpRight.addTab(vd.getName(), arbre);
-			} catch (NotInTreeException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// ordre des arguments : name capacity
+					String enteredText = createVFSTextField.getText();
+					List<String> splitEnteredText = CLUI.preTreatment(enteredText);
+					if (splitEnteredText.size() != 2){
+						htmlView.setText("You must enter first the name and second the capacity of the Vitual Disk !");
+					}
+					else{
+						try{
+							CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
+							VirtualDisk vd = VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
+							JPanel vdContent = new JPanel();
+							vdContent.setName(splitEnteredText.get(0));
+							JTree arbre = new JTree();
+							try {
+								arbre = TreeUtil.buildTreeFromVd(vd);
+								tabbedPanUpRight.addTab(vd.getName(), arbre);
+							} catch (NotInTreeException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						catch(NumberFormatException i){
+							htmlView.setText("The second argument must be the capacity of the Virtual Disk, of type int");
+						}
+					}
+
+				}
 
 	}
 
