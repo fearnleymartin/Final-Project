@@ -131,7 +131,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		tabbedPanUpRight.addTab("vfs1",panUpRight);
 
 		Box b = Box.createVerticalBox();
-//		b.setMinimumSize(new Dimension(900,100));
 		b.setPreferredSize(new Dimension(900,100));
 		Box lineWriting = Box.createHorizontalBox();
 		lineWriting.add(new JLabel("Write here : "));
@@ -141,8 +140,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		lineReading.add(new JLabel("Read here : "));
 		JScrollPane htmlContainer = new JScrollPane(htmlView);
 //		htmlContainer.setPreferredSize(new Dimension(1000,100));
-		htmlView.setPreferredSize(new Dimension(1000,100));
-//		htmlContainer.setMinimumSize(new Dimension(700,100));
+//		htmlView.setPreferredSize(new Dimension(1000,100));
 		htmlContainer.setPreferredSize(new Dimension(700,100));
 		htmlContainer.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		lineReading.add(htmlContainer);
