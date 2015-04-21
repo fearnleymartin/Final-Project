@@ -358,6 +358,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				str +="Syntax: <vfsNewName>\n " ;
 				str +="It will change the older name of the current vfs by vfsNewName. \n";
 				break;
+			case "load" :
+				str+= "allows you to load a virtual disk the computerpath (absolute or relative) of which is written in the text field next to it \n";
+				str +="Syntax : <computerpath> \n";
 			case "copy":
 				str +="To copy, within the VFS named vfsname, the content of a file/directory which is currently selected.\n " ;
 				str +="<targetpath>\n " ;
@@ -365,7 +368,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 				break;
 			case "paste" :
 				str += "After having copied a file/directory, allows you to paste it into the current selected directory \n";
-				str += "Syntax : just copy a first file/directory and then select the place where you want to paste it. Then click on paste.";
+				str += "Syntax : just copy a first file/directory and then select the place where you want to paste it. Then click on paste.\n";
 			case "remove file":
 				str +="To remove a file/directory which is currently selected.\n " ;
 				str +="Syntax: just select the file/directory to be removed and click on the remove file button \n " ;
@@ -393,7 +396,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			case "help":
 				str +="To display an \"help message\" (similar to that of unix shell terminal) which gives information about how to use the command named command-name. If help is invoked without <command-name> argument then it should display a generic help message about how to use the CLUI (e.g. general syntax of a CLUI command, list of all CLUI commands name).\n " ;
 				str +="<command-name>\n " ;
-				str +="if nothing is written, gives you general information about the commands";
+				str +="if nothing is written, gives you general information about the commands\n";
 				break;
 				//			case "gen":
 				//				str +="Generates a tree of the current file system\n " ;
@@ -406,6 +409,8 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			case "cut" : 
 				str += "";
 				break;
+			case "query free space" :
+				str += "Prints the free space of the selected virtual disk";
 			default: 
 				str += "";
 			}
