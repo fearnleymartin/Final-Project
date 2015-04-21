@@ -55,7 +55,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	TreePath treepath=null;
 	Tree tempTree=null;
 	Node tempNode=null;
-
+	int index;
+	JPanel pane;
+	
 	public VirtualDisk getVd() {
 		return vd;
 	}
@@ -76,7 +78,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	private JEditorPane commandLineWriting = new JEditorPane();
 	//	protected JEditorPane htmlPane = new JEditorPane();
 	private JPanel panLeft = new JPanel();
-	private JPanel panUpRight = new JPanel();
+//	private JPanel panUpRight = new JPanel();
 	private JPanel panDownRight = new JPanel();
 	private JTabbedPane tabbedPanUpRight = new JTabbedPane();
 	JTextArea htmlView = new JTextArea();
@@ -177,7 +179,6 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		buttonExport.addMouseListener(new ExportButtonListener());
 		buttonFind.addMouseListener(new FindButtonListener());
 		buttonHelp.addMouseListener(new HelpButtonListener());
-		buttonImport.addMouseListener(new ImportButtonListener());
 		tabbedPanUpRight.addMouseListener(new TabMouseListener());
 		buttonCut.addMouseListener(new CutButtonListener());
 
@@ -474,7 +475,9 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-				panUpRight.remove(tree);
+				JPanel pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
+				
+				pane.remove(tree);
 				String parent = TreeUtil.treePathToString(treepath);	
 				String hostpath = importFileStructureTextField.getText();
 
@@ -486,7 +489,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				panUpRight.add(tree);
+				
+				
+				
+				pane.add(tree);
+				
 				tree.addTreeSelectionListener(new SelectionListener());
 				revalidate();	
 				repaint();
@@ -553,7 +560,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (treepath != null){
-				panUpRight.remove(tree);
+				pane.remove(tree);
 				String path = TreeUtil.treePathToString(treepath);
 				try {
 					tempTree = vd.getSubTree(path);
@@ -569,7 +576,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					panUpRight.add(tree);
+					pane.add(tree);
 					tree.addTreeSelectionListener(new SelectionListener());
 					revalidate();
 					repaint();
@@ -627,7 +634,7 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 							//				        	System.out.println(tempNode.toString());
 							//				        	System.out.println(parent.toString());
 
-							panUpRight.remove(tree);    
+							pane.remove(tree);    
 
 							for (Node n : subTreeCopy.getNodeList()){
 								vd.getTree().addNode(n);
@@ -666,10 +673,10 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							CLUI.ls("vdlevel1", "", "");
+							CLUI.ls(vd.getName(), "", "");
 							System.out.println(vd.getTree().getNodeList().toString());
 							System.out.println(vd.getTree().getEdgeList().toString());
-							panUpRight.add(tree);
+							pane.add(tree);
 							tree.addTreeSelectionListener(new SelectionListener());
 							revalidate();
 							repaint();   
@@ -715,10 +722,11 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			int index = tabbedPanUpRight.getSelectedIndex();
+			pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
 			String nameVFS = tabbedPanUpRight.getTitleAt(index);
 			try {
 				vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
-				Component selectedComponent = tabbedPanUpRight.getTabComponentAt(index);
+				
 				tree = TreeUtil.buildTreeFromVd(vd);
 //				selectedComponent.add
 //				tabbedPanUpRight.set
@@ -798,20 +806,21 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			else{
 				try{
 					CLUI.crvfs(splitEnteredText.get(0), Integer.valueOf(splitEnteredText.get(1)));
-					VirtualDisk tempVD = CLUI.getVdACNFromVfsname(splitEnteredText.get(0)).getVd();
-//					VdcnManagement.getVdList().get(VdcnManagement.getVdList().size()-1).getVd();
+					vd = CLUI.getVdACNFromVfsname(splitEnteredText.get(0)).getVd();
 					JPanel vdContent = new JPanel();
 					vdContent.setName(splitEnteredText.get(0));
-//					JTree arbre = new JTree();
-//					try {
-//						arbre = TreeUtil.buildTreeFromVd(tempVD);
-//						vdContent.add(arbre);
-						tabbedPanUpRight.addTab(tempVD.getName(), vdContent);
-//						arbre.addTreeSelectionListener(new SelectionListener());
-//					} catch (NotInTreeException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
+
+					try {
+						tabbedPanUpRight.addTab(vd.getName(), vdContent);
+						index = tabbedPanUpRight.indexOfTab(vdContent.getName());
+						tabbedPanUpRight.setSelectedIndex(index);
+						tree = TreeUtil.buildTreeFromVd(vd);
+						vdContent.add(tree);
+						tree.addTreeSelectionListener(new SelectionListener());
+					} catch (NotInTreeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				catch(NumberFormatException i){
 					htmlView.setText("Error : The second argument must be the capacity of the Virtual Disk, of type int");
@@ -897,17 +906,17 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (treepath != null){
-				panUpRight.remove(tree);
+				pane.remove(tree);
 				String oldPath = TreeUtil.treePathToString(treepath);	
 
-				CLUI.rm("vdlevel1", oldPath);
+				CLUI.rm(vd.getName(), oldPath);
 				try {
 					tree = TreeUtil.buildTreeFromVd(vd);
 				} catch (NotInTreeException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				panUpRight.add(tree);
+				pane.add(tree);
 				tree.addTreeSelectionListener(new SelectionListener());
 				revalidate();
 				repaint();
@@ -1002,17 +1011,17 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 			// TODO Auto-generated method stub
 			if (treepath != null){
 				if ((!renameTextField.getText().equals("")) && (renameTextField.getText()!=null)){
-					panUpRight.remove(tree);
+					pane.remove(tree);
 					String oldPath = TreeUtil.treePathToString(treepath);	
 					String newPath = renameTextField.getText();
-					CLUI.mv("vdlevel1", oldPath, newPath);
+					CLUI.mv(vd.getName(), oldPath, newPath);
 					try {
 						tree = TreeUtil.buildTreeFromVd(vd);
 					} catch (NotInTreeException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					panUpRight.add(tree);
+					pane.add(tree);
 					tree.addTreeSelectionListener(new SelectionListener());
 					revalidate();
 					repaint();
