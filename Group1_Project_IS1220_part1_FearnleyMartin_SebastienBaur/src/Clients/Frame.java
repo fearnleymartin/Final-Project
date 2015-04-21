@@ -51,13 +51,13 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 
 
 
-	VirtualDisk vd;
-	JTree tree;
-	TreePath treepath=null;
-	Tree tempTree=null;
-	Node tempNode=null;
-	int index;
-	JPanel pane;
+	protected VirtualDisk vd;
+	protected JTree tree;
+	protected TreePath treepath=null;
+	protected Tree tempTree=null;
+	protected Node tempNode=null;
+	protected int index;
+	protected JPanel pane;
 
 	public VirtualDisk getVd() {
 		return vd;
@@ -85,14 +85,14 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 	JTextArea htmlView = new JTextArea();
 
 	//text fields
-	JTextField renameTextField = new JTextField(13);
-	JTextField copyTextField = new JTextField(20);
-	JTextField createVFSTextField = new JTextField(20); // maybe add two others ones for size and location and name
-	JTextField importFileStructureTextField = new JTextField(20); // maybe open a window of navigation AND maybe others text boxes
-	JTextField exportVFSTextField = new JTextField(13);
-	JTextField findTextField = new JTextField(20);
-	JTextField helpTextField = new JTextField(20);
-	JTextField loadTextField = new JTextField(20);
+	JTextField renameTextField = new JTextField();
+	JTextField copyTextField = new JTextField();
+	JTextField createVFSTextField = new JTextField(); // maybe add two others ones for size and location and name
+	JTextField importFileStructureTextField = new JTextField(); // maybe open a window of navigation AND maybe others text boxes
+	JTextField exportVFSTextField = new JTextField();
+	JTextField findTextField = new JTextField();
+	JTextField helpTextField = new JTextField();
+	JTextField loadTextField = new JTextField();
 
 	private JButton buttonRename = new JButton("Rename");
 	private JButton buttonCopy = new JButton("Copy");
@@ -157,6 +157,13 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		panLeft.add(buttonHelp);
 		panLeft.add(helpTextField);
 
+		TextPrompt renametp = new TextPrompt("<new name>",renameTextField);
+		TextPrompt createvfstp = new TextPrompt("<vfsname> <size>",createVFSTextField);
+		TextPrompt ifstp = new TextPrompt("<host path>",importFileStructureTextField);
+		TextPrompt expvfstp = new TextPrompt("<export path>",exportVFSTextField);
+		TextPrompt findtp = new TextPrompt("<filename>",findTextField);
+		TextPrompt helptp = new TextPrompt("<command>",helpTextField);
+		TextPrompt loadtp = new TextPrompt("<host path>",loadTextField);
 
 
 		//		panUpRight.add(tree);
