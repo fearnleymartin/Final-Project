@@ -768,19 +768,24 @@ public class Frame extends JFrame implements TreeSelectionListener, ActionListen
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			int index = tabbedPanUpRight.getSelectedIndex();
-			pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
-			String nameVFS = tabbedPanUpRight.getTitleAt(index);
-			try {
-				vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
+			if (VdcnManagement.vdList.isEmpty()){
+				htmlView.setText("There is still not any opened virtual disk. Please use the create VFS or the Load button to add one");
+			}
+			else{
+				int index = tabbedPanUpRight.getSelectedIndex();
+				pane = (JPanel)tabbedPanUpRight.getComponentAt(index);
+				String nameVFS = tabbedPanUpRight.getTitleAt(index);
+				try {
+					vd = CLUI.getVdACNFromVfsname(nameVFS).getVd();
 
-				tree = TreeUtil.buildTreeFromVd(vd);
+					tree = TreeUtil.buildTreeFromVd(vd);
 
-			} catch (VirtualDiskDoesntExistException e1) {
-				e1.printStackTrace();
-			} catch (NotInTreeException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				} catch (VirtualDiskDoesntExistException e1) {
+					e1.printStackTrace();
+				} catch (NotInTreeException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 			}
 
 
